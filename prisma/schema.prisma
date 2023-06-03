@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uid                     String                @id
+  first_name              String
+  last_name               String
+  profile_pic             String
+  groups                  GroupMembership[]
+  interested_group_events GroupEventInterest[]
+  confirmed_events        GroupConfirmedEvents[] 
+}
+
+model GroupMembership {
+  group_id   Int
+  group      Group    @relation(fields: [group_id], references: [id])
+  user_uid   String
+  user       User     @relation(fields: [user_uid], references: [uid])
+  admin      Boolean
+  created_at DateTime @default(now())
+
+  @@id([group_id, user_uid])
+}
+
+model Group {
+  id                Int                    @id @default(autoincrement())
+  name              String
+  members           GroupMembership[]
+  created_at        DateTime               @default(now())
+  updated_at        DateTime               @updatedAt
+  interested_events GroupEventInterest[]
+  confirmed_events  GroupConfirmedEvents[]
+}
+
+model Event {
+  id                 Int                  @id
+  event_slug         String               @unique
+  name               String
+  location           String
+  description        String
+  showings           EventShowing[]
+  GroupEventInterest GroupEventInterest[]
+}
+
+model EventShowing {
+  id                   Int                    @id
+  event_id             Int
+  event                Event                  @relation(fields: [event_id], references: [id])
+  time                 DateTime
+  groups_attending     GroupConfirmedEvents[]
+}
+
+model GroupEventInterest {
+  id                 Int    @id
+  event              Event  @relation(fields: [eventId], references: [id])
+  eventId            Int
+  group              Group  @relation(fields: [groupId], references: [id])
+  groupId            Int
+  interested_members User[]
+}
+
+model GroupConfirmedEvents {
+  id               Int          @id
+  event_showings   EventShowing @relation(fields: [event_showing_id], references: [id])
+  event_showing_id Int
+  group            Group        @relation(fields: [groupId], references: [id])
+  groupId          Int
+  attendees        User[]
+}
