@@ -10,7 +10,7 @@ interface NavbarProps {
 }
 
 const NavBar = () => {
-    const { session, setView } = useAuth();
+    const { initial, session, setView } = useAuth();
 
     return  (
         <nav className="mx-auto p-6 flex items-center justify-between">
@@ -26,13 +26,13 @@ const NavBar = () => {
             
             <div>
                 {
-                    session &&
+                    !initial && session &&
                     <div className="flex">
                         <SignOut />
                     </div>
                 }
                 {
-                    !session &&
+                    !initial && !session &&
                     <div className="flex">
                         <button onClick={() => setView(VIEWS.SIGN_IN)} className="bg-pink-400 text-white p-2 rounded mr-3">Login</button>
                         <button onClick={() => setView(VIEWS.SIGN_UP)} className="bg-white text-black p-2 rounded">Signup</button>

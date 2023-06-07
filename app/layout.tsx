@@ -31,7 +31,7 @@ export default async function RootLayout({
         <main className='min-h-screen w-screen bg-white dark:bg-gray-900'>
           <AuthProvider accessToken={accessToken}>
             <main className='m-auto'>
-                <NavBar session={session}/>
+                <NavBar />
                 {children}
             </main>
           </AuthProvider>
