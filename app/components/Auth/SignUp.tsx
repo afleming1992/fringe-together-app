@@ -7,6 +7,10 @@ import * as Yup from 'yup';
 
 import { useAuth, VIEWS } from '../AuthProvider';
 import supabase from '../../lib/supabase/browser';
+import { AuthResponse } from '@supabase/supabase-js';
+import { useMutation, useQuery } from '@apollo/client';
+import { createUser } from '@/app/lib/gql/user';
+import apolloClient from '@/app/lib/apollo/client';
 
 const SignUpSchema = Yup.object().shape({
   firstName: Yup.string().required('Required'),
@@ -24,7 +28,7 @@ const SignUp = () => {
         setSuccessMsg('');
         setErrorMsg('');
 
-        const { error } = await supabase.auth.signUp({
+        const authResponse: AuthResponse = await supabase.auth.signUp({
             email: formData.email,
             password: formData.password,
             options: {
@@ -35,11 +39,31 @@ const SignUp = () => {
             }
         });
 
-        if (error) {
-            setErrorMsg(error.message);
-        } else {
-            setSuccessMsg('Success! Please check your email for further instructions.');
+        if (authResponse.error) {
+            setErrorMsg(authResponse.error.message);
+            return;
         }
+        
+        try {
+            const { errors } = await apolloClient.mutate({
+                mutation: createUser,
+                variables: {
+                    uid: authResponse.data.user?.id,
+                    first_name: formData.firstName,
+                    last_name: formData.lastName
+                }
+            });
+
+            if (errors) {
+                setErrorMsg(errors[0].message);
+            } else {
+                setSuccessMsg('Success! Please check your email for further instructions.');
+            }
+        } catch (e) {
+            console.error(e);
+        };
+        
+        
     }
 
     return (

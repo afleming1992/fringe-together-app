@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
-    "@apollo/client": "~3.8.0-alpha.15",
+    "@apollo/client": "~3.7.15",
     "@apollo/experimental-nextjs-app-support": "~0.1.0",
+    "@graphql-tools/load-files": "~7.0.0",
     "@prisma/client": "4.15.0",
     "@supabase/auth-helpers-nextjs": "~0.7.0",
     "@supabase/auth-ui-react": "~0.4.2",
@@ -19,11 +21,15 @@
     "@types/node": "20.2.5",
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
+    "apollo-server-micro": "~3.12.0",
     "autoprefixer": "10.4.14",
     "classnames": "~2.3.2",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "formik": "~2.4.1",
+    "graphql": "~16.6.0",
+    "graphql-yoga": "~4.0.0",
+    "micro-cors": "~0.1.1",
     "next": "13.4.4",
     "postcss": "8.4.24",
     "prisma": "~4.15.0",
@@ -34,6 +40,10 @@
     "yup": "~1.2.0"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "~0.5.3"
+    "@graphql-codegen/cli": "4.0.1",
+    "@graphql-codegen/client-preset": "4.0.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@tailwindcss/forms": "~0.5.3",
+    "@types/micro-cors": "~0.1.3"
   }
 }
