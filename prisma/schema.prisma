@@ -11,7 +11,7 @@ model User {
   uid                     String                @id
   first_name              String
   last_name               String
-  profile_pic             String
+  profile_pic             String?
   groups                  GroupMembership[]
   interested_group_events GroupEventInterest[]
   confirmed_events        GroupConfirmedEvents[] 
