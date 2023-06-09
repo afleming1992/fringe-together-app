@@ -24,7 +24,7 @@ export default function Home() {
 
     return  (
       <div className="card">
-        <h2>Welcome!</h2>
+        <h2>Welcome back!</h2>
         <code className="highlight">{user.role}</code>
       </div>
     )

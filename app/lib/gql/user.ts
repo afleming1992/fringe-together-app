@@ -9,3 +9,13 @@ export const createUser = gql`
         }
     }
 `
+
+export const getUser = gql`
+    query getUserById($uid: ID!) {
+        user(uid: $uid) {
+            first_name,
+            last_name,
+            uid
+        }
+    }
+`

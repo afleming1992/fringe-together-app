@@ -3,8 +3,8 @@ import resolvers from './resolvers'
 import { prisma } from '@/lib/prisma'
 import supabase from '@/lib/supabase/server'
 import typeDefs from './schema';
-
-
+import { createContext } from './context';
+import { create } from 'domain';
 
 const { handleRequest } = createYoga({
     schema: createSchema({
@@ -14,11 +14,7 @@ const { handleRequest } = createYoga({
     graphqlEndpoint: '/api/graphql',
     fetchAPI: { Response },
     context: async ({request}) => {
-        return {
-            request,
-            prisma,
-            supabase
-        }
+        return createContext(request);
     }
 });
 

@@ -34,7 +34,7 @@ model Group {
   members           GroupMembership[]
   created_at        DateTime               @default(now())
   updated_at        DateTime               @updatedAt
-  interested_events GroupEventInterest[]
+  interested_events GroupEventInterest[]   
   confirmed_events  GroupConfirmedEvents[]
 }
 
