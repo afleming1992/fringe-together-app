@@ -27,6 +27,8 @@ const SignIn = () => {
         if(error) {
             setErrorMsg(error.message);
         }
+
+        setView(null);
     }
 
     return (

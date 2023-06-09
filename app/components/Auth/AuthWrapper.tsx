@@ -3,10 +3,11 @@ import Auth from ".";
 import Card from "../Card";
 
 interface AuthRequiredWrapper {
+    required: boolean,
     children: any
 }
 
-const AuthRequiredWrapper = ({children}: AuthRequiredWrapper) => {
+const AuthWrapper = ({children, required}: AuthRequiredWrapper) => {
     const { initial, user, view, signOut } = useAuth();
 
     if (initial) {
@@ -15,7 +16,7 @@ const AuthRequiredWrapper = ({children}: AuthRequiredWrapper) => {
         </div>
     }
 
-    if (!user) {
+    if (!user && required || view != null) {
         return <Auth view={view} />
     } else {
         return <>
@@ -24,4 +25,4 @@ const AuthRequiredWrapper = ({children}: AuthRequiredWrapper) => {
     }
 }
 
-export default AuthRequiredWrapper;
+export default AuthWrapper;

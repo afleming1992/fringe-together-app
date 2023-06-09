@@ -8,6 +8,7 @@ import { AuthChangeEvent, AuthError, Session, User } from '@supabase/supabase-js
 
 interface AuthProviderProps {
     children: any,
+    view: string,
     accessToken: string | null,
 }
   
@@ -33,12 +34,12 @@ export interface AuthContextData {
     signOut: any
 }
 
-export const AuthContext = createContext<AuthContextData>({initial: undefined, session: undefined, user: undefined, view: undefined, setView: () => {}, signOut: () => { return false }});
+export const AuthContext = createContext<AuthContextData>({initial: undefined, session: null, user: undefined, view: undefined, setView: () => {}, signOut: () => { return false }});
 
 export const AuthProvider = ({ accessToken, ...props }: AuthProviderProps) => {
     const [ initial, setInitial ] = useState(true);
     const [ session, setSession ] = useState<Session | null>(null);
-    const [ view, setView ] = useState<string>(VIEWS.SIGN_IN);
+    const [ view, setView ] = useState<string | null>(props.view ?? null);
     const [ user, setUser ] = useState<User | null>(null);
     const router = useRouter();
 
@@ -64,6 +65,8 @@ export const AuthProvider = ({ accessToken, ...props }: AuthProviderProps) => {
                     setView(VIEWS.UPDATE_PASSWORD);
                     break;
                 case 'SIGNED_OUT':
+                    setView(null);
+                    break;
                 case 'USER_UPDATED':
                     setView(VIEWS.SIGN_IN);
                     break;
