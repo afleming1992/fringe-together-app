@@ -5,30 +5,21 @@ import Intro from './components/Intro'
 
 import { useAuth, VIEWS } from './components/AuthProvider';
 import Card from './components/Card';
+import AuthRequiredWrapper from './components/Auth/AuthWrapper';
 
 export default function Home() {
-  const { initial, user, view, signOut } = useAuth();
+  const { user } = useAuth();
 
-  if (initial) {
-    return <div className="mx-auto max-w-md">
-        <Card>Loading...</Card>
-      </div>
-  }
-
-  if(view === VIEWS.UPDATE_PASSWORD) {
-    return <Auth view={view} />;
-  }
-
-  if (user) {
-    console.log(user);
-
-    return  (
-      <div className="card">
-        <h2>Welcome back!</h2>
-        <code className="highlight">{user.role}</code>
-      </div>
-    )
-  }
-
-  return <Auth view={view} />
+  return  (
+    <>
+      {
+          user &&
+          <>Welcome back</>
+      }
+      {
+          !user &&
+          <Intro />
+      }
+    </>
+  );
 }
