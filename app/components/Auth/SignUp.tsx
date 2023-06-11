@@ -6,11 +6,11 @@ import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { useAuth, VIEWS } from '../AuthProvider';
-import supabase from '../../lib/supabase/browser';
+import supabase from '@/lib/supabase/browser';
 import { AuthResponse } from '@supabase/supabase-js';
 import { useMutation, useQuery } from '@apollo/client';
-import { createUser } from '@/app/lib/gql/user';
-import apolloClient from '@/app/lib/apollo/client';
+import { createUser } from '@/lib/gql/user';
+import apolloClient from '@/lib/apollo/client';
 
 const SignUpSchema = Yup.object().shape({
   firstName: Yup.string().required('Required'),

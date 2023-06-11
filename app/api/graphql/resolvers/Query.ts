@@ -9,7 +9,7 @@ export const Query = {
             throw new Error("Unauthenticated");
         }
 
-        return await ctx.prisma.user.findFirst({where: { uid: ctx.currentUser.uid }});
+        return await ctx.prisma.user.findFirst({where: { uid: ctx.currentUser.id }});
     },
     async groups(parent: any, args: any, ctx: GraphQLContext) {
         if(ctx.currentUser === null) {
@@ -20,7 +20,7 @@ export const Query = {
             where: {
                 members: {
                     some: {
-                        user_uid: ctx.currentUser.uid
+                        user_uid: ctx.currentUser.id
                     }
                 }
             },
@@ -43,7 +43,7 @@ export const Query = {
                 id: args.id,
                 members: {
                     some: {
-                        user_uid: ctx.currentUser.uid
+                        user_uid: ctx.currentUser.id
                     }
                 },
             },

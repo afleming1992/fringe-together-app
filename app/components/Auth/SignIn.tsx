@@ -4,7 +4,7 @@ import { useState } from 'react';
 import cn from 'classnames';
 
 import { useAuth, VIEWS } from '../AuthProvider';
-import supabase from '../../lib/supabase/browser';
+import supabase from '@/lib/supabase/browser';
 
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
