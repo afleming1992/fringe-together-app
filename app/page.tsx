@@ -7,6 +7,7 @@ import { useAuth, VIEWS } from './components/AuthProvider';
 import Card from './components/Card';
 import AuthRequiredWrapper from './components/Auth/AuthWrapper';
 import AuthWrapper from './components/Auth/AuthWrapper';
+import Dashboard from './components/Dashboard';
 
 export default function Home() {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ export default function Home() {
     <AuthWrapper required={false}>
       {
           user &&
-          <>Welcome back</>
+          <Dashboard />
       }
       {
           !user &&
