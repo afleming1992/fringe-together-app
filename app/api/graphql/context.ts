@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma"
-import { PrismaClient, User } from "@prisma/client"
-import { YogaInitialContext } from "graphql-yoga"
+import { PrismaClient } from "@prisma/client"
 import { authenticateUser } from "./auth"
+import { User } from "@supabase/supabase-js"
 
 export type GraphQLContext = {
     prisma: PrismaClient,

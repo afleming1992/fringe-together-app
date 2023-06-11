@@ -36,7 +36,7 @@ const mutators = {
                         {
                             user: {
                                 connect: {
-                                    uid: ctx.currentUser.uid
+                                    uid: ctx.currentUser.id
                                 }
                             },
                             admin: true
