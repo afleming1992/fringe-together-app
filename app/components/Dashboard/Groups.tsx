@@ -1,24 +1,33 @@
-import apollo from '@/lib/apollo/client';
-import { Group } from '@prisma/client';
+"use client";
 
-async function getGroups() {
-    const { data: { groups } } = await apollo.query({
-        query: getGroups
-    })
-    
-    return groups;
-}
+import { Group, getGroups } from '@/lib/gql/group';
+import { useEffect, useState } from 'react';
 
-const Groups = async () => {
-    
+const Groups = () => {
+    const [ groups, setGroups ] = useState<Group[] | null>();
+
+    useEffect(() => {
+        const getData = async () => {
+            const groups = await getGroups();
+            setGroups(groups);
+        }
+        getData();
+    }, [])
 
     return (
         <>
             {
-                groups.map((group : Group) => {
-                    <h1>{group.name}</h1>
-                })
+                groups &&
+                <>
+                    {
+                        groups.map((group : Group) => (
+                            <h1 key={group.id}>{group.name}</h1>
+                        ))
+                    }
+                </>
+                
             }
+            
         </>
     )
 }
