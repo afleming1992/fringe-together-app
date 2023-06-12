@@ -11,7 +11,7 @@ import apollo from '@/lib/apollo/client';
 
 interface AuthProviderProps {
     children: any,
-    view: string,
+    view?: string | null,
     accessToken: string | null,
 }
   
@@ -33,7 +33,7 @@ export interface AuthContextData {
     session: Session | null,
     user: User | null,
     profile: UserProfile | null,
-    view?: any,
+    view?: string | null,
     setView: any,
     signOut: any
 }
