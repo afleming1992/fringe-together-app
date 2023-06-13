@@ -4,8 +4,8 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import supabase from '@/lib/supabase/browser'
-import { AuthChangeEvent, AuthError, Session, User } from '@supabase/supabase-js';
-import { getMe } from '@/lib/gql/user';
+import { AuthChangeEvent, AuthError, Session, User } from '@supabase/supabase-js'
+import { getMe, User as UserProfile } from '@/lib/gql/user';
 
 import apollo from '@/lib/apollo/client';
 
@@ -36,12 +36,6 @@ export interface AuthContextData {
     view?: string | null,
     setView: any,
     signOut: any
-}
-
-export interface UserProfile {
-    firstName: string | null
-    lastName: string | null
-    profilePic: string | null
 }
 
 export const AuthContext = createContext<AuthContextData>({initial: undefined, session: null, user: null, profile: null, view: null, setView: () => {}, signOut: () => { return false }});
@@ -100,11 +94,7 @@ export const AuthProvider = ({ accessToken, ...props }: AuthProviderProps) => {
                     }
                 })
     
-                setProfile({
-                    firstName: me.first_name,
-                    lastName: me.last_name,
-                    profilePic: me.profile_pic
-                });
+                setProfile(me);
             } else {
                 setProfile(null);
             }

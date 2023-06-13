@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { VIEWS, useAuth } from "../AuthProvider";
 import supabase from "@/lib/supabase/browser";
-import Card from "../Card";
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import cn from 'classnames';

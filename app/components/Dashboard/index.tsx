@@ -1,7 +1,7 @@
 "use client";
 
+import { Box } from "@chakra-ui/react";
 import { useAuth } from "../AuthProvider";
-import Card from "../Card";
 import Groups from "./Groups";
 
 const Dashboard = () => {
@@ -17,16 +17,16 @@ const Dashboard = () => {
                     </div>
                 }
                 <div className="mt-2 w-full p-3">
-                    <Card>
+                    <Box>
                         <h3 className="font-bold text-2xl">My Next Shows</h3>
                         
-                    </Card>
+                    </Box>
                 </div>
                 <div className="mt-2 w-full p-3">
-                    <Card>
+                    <Box>
                         <h3 className="font-bold text-2xl">My Groups</h3>
                         <Groups />
-                    </Card>
+                    </Box>
                 </div>
             </>
         </div>

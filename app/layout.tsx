@@ -1,10 +1,9 @@
-import { AuthProvider } from './components/AuthProvider'
 import NavBar from './components/Nav'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import supabase from '@/lib/supabase/server'
-import { access } from 'fs'
 import Providers from './components/Providers'
+import { cookies } from 'next/headers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,13 +29,9 @@ export default async function RootLayout({
     <html lang="en">
       <head />
       <body className={inter.className}>
-        <Providers accessToken={accessToken}>
-          <main className='min-h-screen w-screen bg-white dark:bg-gray-900'>
-              <main className='m-auto'>
-                  <NavBar />
-                  {children}
-              </main>
-          </main>
+        <Providers accessToken={accessToken} cookies={cookies()}>
+          <NavBar />
+          {children}
         </Providers>
       </body>  
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Group, getGroups } from '@/lib/gql/group';
+import { Box, Card, CardHeader, Skeleton } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 const Groups = () => {
@@ -18,16 +19,24 @@ const Groups = () => {
         <>
             {
                 groups &&
-                <>
+                <Box mt="4">
                     {
                         groups.map((group : Group) => (
-                            <h1 key={group.id}>{group.name}</h1>
+                            <Card key={group.id}>
+                                <CardHeader>
+                                    { group.name }
+                                </CardHeader>
+                            </Card>
                         ))
-                    }
-                </>
-                
+                    }        
+                </Box>
             }
-            
+            {
+                !groups &&
+                <Skeleton mt="4">
+                    <p>This Content will never be shown</p>
+                </Skeleton>
+            }
         </>
     )
 }
