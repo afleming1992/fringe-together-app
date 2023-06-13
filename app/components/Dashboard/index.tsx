@@ -1,6 +1,6 @@
 "use client";
 
-import { Box } from "@chakra-ui/react";
+import { Box, Stack, Text } from "@chakra-ui/react";
 import { useAuth } from "../AuthProvider";
 import Groups from "./Groups";
 
@@ -12,22 +12,20 @@ const Dashboard = () => {
             <>
                 {
                     profile &&
-                    <div className="p-3">
-                        <h3 className="font-bold text-3xl">Welcome back <span className="text-pink-400">{ profile.firstName }</span></h3>
-                    </div>
+                    <Text fontWeight={"700"} fontSize={"3xl"}>Welcome back <span color="pink.400">{ profile.first_name }</span></Text>
                 }
-                <div className="mt-2 w-full p-3">
+                {/* <div className="mt-2 w-full p-3">
                     <Box>
                         <h3 className="font-bold text-2xl">My Next Shows</h3>
                         
                     </Box>
-                </div>
-                <div className="mt-2 w-full p-3">
+                </div> */}
+                <Stack>
                     <Box>
-                        <h3 className="font-bold text-2xl">My Groups</h3>
+                        <Text fontSize={"xl"}>My Groups</Text>
                         <Groups />
                     </Box>
-                </div>
+                </Stack>
             </>
         </div>
     );

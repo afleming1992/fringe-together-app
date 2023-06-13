@@ -1,7 +1,8 @@
 "use client";
 
+import NextLink from 'next/link';
 import { Group, getGroups } from '@/lib/gql/group';
-import { Box, Card, CardHeader, Skeleton } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Skeleton, Stack, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 const Groups = () => {
@@ -22,10 +23,21 @@ const Groups = () => {
                 <Box mt="4">
                     {
                         groups.map((group : Group) => (
-                            <Card key={group.id}>
-                                <CardHeader>
-                                    { group.name }
-                                </CardHeader>
+                            <Card 
+                                key={group.id}
+                                direction={{ base: 'column', sm: 'row' }}
+                                overflow='hidden'
+                                variant='outline'>
+                                <Stack>
+                                    <CardBody>
+                                        <Heading size='md'>{ group.name }</Heading>
+                                    </CardBody>
+                                    <CardFooter>
+                                        <Button as={NextLink} href={`/group/${group.id}`} variant='outline' colorScheme="pink">
+                                            View Group
+                                        </Button>
+                                    </CardFooter>
+                                </Stack>  
                             </Card>
                         ))
                     }        

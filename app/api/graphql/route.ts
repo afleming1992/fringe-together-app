@@ -1,10 +1,7 @@
 import { createYoga, createSchema } from 'graphql-yoga'
 import resolvers from './resolvers'
-import { prisma } from '@/lib/prisma'
-import supabase from '@/lib/supabase/server'
 import typeDefs from './schema';
 import { createContext } from './context';
-import { create } from 'domain';
 
 const { handleRequest } = createYoga({
     schema: createSchema({

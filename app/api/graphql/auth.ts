@@ -1,6 +1,5 @@
 import supabase from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
-import { NextApiResponse } from "next";
+import prisma from "@/lib/prisma";
 import { User } from "@supabase/supabase-js";
 
 export async function authenticateUser(

@@ -1,5 +1,6 @@
 'use client';
 
+import NextLink from 'next/link';
 import { Session } from '@supabase/auth-helpers-nextjs';
 import supabase from '@/lib/supabase/server';
 import SignOut from '../SignOut';
@@ -40,7 +41,7 @@ const NavBar = () => {
                     </Flex>
                     <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
                         <Text
-                            as={Link}
+                            as={NextLink}
                             href={"/"}
                             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
                             fontFamily={'heading'}
@@ -100,7 +101,7 @@ const NavBar = () => {
 }
 
 interface DesktopNavProps {
-    
+
 }
 
 const DesktopNav = (props: DesktopNavProps) => {
