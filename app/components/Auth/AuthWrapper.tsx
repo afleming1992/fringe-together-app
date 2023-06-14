@@ -12,14 +12,14 @@ interface AuthRequiredWrapper {
 const AuthWrapper = ({children, required}: AuthRequiredWrapper) => {
     const { initial, user, view, signOut } = useAuth();
 
-    if (initial) {
+    if (initial && required) {
         return <div className="mx-auto max-w-md">
             <Loading />
         </div>
     }
 
     if (!user && required || view != null) {
-        return <Auth view={view} />
+        return <Auth />
     } else {
         return <>
             {children}

@@ -7,12 +7,10 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 
 interface AuthProps {
-    view: {
-        initialView: string | undefined
-    }
+    initialView?: string | null
 }
 
-const Auth = ({view: initialView}: AuthProps) => {
+const Auth = ({initialView}: AuthProps) => {
     let { view } = useAuth();
 
     if ( initialView ) {
