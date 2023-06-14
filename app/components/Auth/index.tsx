@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth, VIEWS } from '../AuthProvider';
+import Loading from '../Loading';
 import ResetPassword from './ResetPassword';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
@@ -20,7 +21,7 @@ const Auth = ({view: initialView}: AuthProps) => {
 
     switch(view) {
         case VIEWS.LOADING:
-            return <div>Loading...</div>
+            return <Loading />
         case VIEWS.UPDATE_PASSWORD:
             return <>Update Password</>
         case VIEWS.FORGOTTEN_PASSWORD:

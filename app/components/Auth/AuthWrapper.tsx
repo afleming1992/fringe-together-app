@@ -2,6 +2,7 @@ import { useAuth } from "../AuthProvider";
 import Auth from ".";
 import Card from "../Card";
 import { Box } from "@chakra-ui/react";
+import Loading from "../Loading";
 
 interface AuthRequiredWrapper {
     required: boolean,
@@ -13,7 +14,7 @@ const AuthWrapper = ({children, required}: AuthRequiredWrapper) => {
 
     if (initial) {
         return <div className="mx-auto max-w-md">
-            <Box>Loading...</Box>
+            <Loading />
         </div>
     }
 
