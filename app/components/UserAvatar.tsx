@@ -15,7 +15,7 @@ const UserAvatar = ({user, ref}: UserAvatarProps) => {
         )
     } else {
         return (
-            <Avatar />
+            <Avatar size={"sm"} />
         )
     }
    
