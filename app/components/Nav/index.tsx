@@ -6,7 +6,7 @@ import supabase from '@/lib/supabase/server';
 import SignOut from '../SignOut';
 import { VIEWS, useAuth } from '../AuthProvider';
 import SignedInMenu from './SignedInMenu';
-import { Box, Flex, IconButton, useColorModeValue, useDisclosure, Text, useBreakpointValue, Button, Stack, Collapse, Link, Popover, PopoverTrigger, PopoverContent } from '@chakra-ui/react';
+import { Box, Flex, IconButton, useColorModeValue, useDisclosure, Text, useBreakpointValue, Button, Stack, Collapse, Link, Popover, PopoverTrigger, PopoverContent, Container } from '@chakra-ui/react';
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 
 interface NavbarProps {
@@ -18,6 +18,7 @@ const NavBar = () => {
     const { initial, session, profile, setView } = useAuth();
 
     return  (
+        <Container maxWidth={"6xl"} mb="5">
         <Box>
             <Flex 
                 bg={useColorModeValue('white', 'gray.800')}
@@ -46,9 +47,9 @@ const NavBar = () => {
                             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
                             fontFamily={'heading'}
                             color={useColorModeValue('gray.800', 'white')}
-                            fontWeight={600}
-                            fontSize={'lg'}>
-                            Fringe<span className='text-pink-400'>Together</span>
+                            fontWeight={700}
+                            fontSize={'2xl'}>
+                            Fringe<Text display="inline" color="pink.400">Together</Text>
                         </Text>
 
                         <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -97,6 +98,7 @@ const NavBar = () => {
                     <MobileNav />
                 </Collapse>
             </Box>
+        </Container>
     )
 }
 

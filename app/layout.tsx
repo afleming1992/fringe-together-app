@@ -4,14 +4,16 @@ import { Inter } from 'next/font/google'
 import supabase from '@/lib/supabase/server'
 import Providers from './components/Providers'
 import { cookies } from 'next/headers'
+import { theme } from './components/Providers'
+import { FlashlessScript } from 'chakra-ui-flashless'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const revalidate = 0;
 
 export const metadata = {
-  title: 'Fringe Group Planner',
-  description: '',
+  title: 'FringeTogether',
+  description: 'Planning your Fringe',
 }
 
 export default async function RootLayout({

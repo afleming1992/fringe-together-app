@@ -6,6 +6,7 @@ import { ReactNode } from "react"
 import { AuthProvider } from './AuthProvider';
 import { extendTheme } from '@chakra-ui/react';
 import { color } from 'framer-motion';
+import { FlashlessScript, flashless } from 'chakra-ui-flashless';
 
 interface ProvidersProps {
     children: ReactNode,
@@ -30,21 +31,15 @@ const colors = {
 }
 
 
-
-export const theme = extendTheme({ config, colors })
+export const theme = extendTheme({ config, colors }, flashless())
 
 const Providers = ({children, accessToken, cookies}: ProvidersProps) => {
-    const colorModeManager =
-        typeof cookies === 'string'
-        ? cookieStorageManagerSSR(cookies)
-        : localStorageManager
-
-
     return (
         <>
+            <FlashlessScript theme={theme} />
             <CacheProvider>
                 <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-                <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+                <ChakraProvider theme={theme}>
                     <AuthProvider accessToken={accessToken}>
                         <Container maxWidth={"full"}>
                             {children}
