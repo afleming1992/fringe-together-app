@@ -8,8 +8,8 @@ export interface User {
 }
 
 export const createUser = gql`
-    mutation createUserWithVariables($first_name: String!, $last_name: String!) {
-        createUser(first_name: $first_name, last_name: $last_name) {
+    mutation createUserWithVariables($uid: ID!, $first_name: String!, $last_name: String!) {
+        createUser(uid: $uid, first_name: $first_name, last_name: $last_name) {
             first_name
             last_name
             uid,

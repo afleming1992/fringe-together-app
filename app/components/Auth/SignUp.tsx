@@ -80,7 +80,7 @@ const SignUp = () => {
             >
                 {({ errors, touched }) => (
                     <Form className={cn('w-full', 'max-w-sm')}>
-                        <h1 className="text-3xl font-bold text-center mb-4 dark:text-white">Sign In</h1>
+                        <h1 className="text-3xl font-bold text-center mb-4 dark:text-white">Sign Up</h1>
                         {successMsg && <div className="text-green-600 w-full text-center">{successMsg}</div>}
                         {errorMsg && <div className="text-red-600 w-full text-center">{errorMsg}</div>}
                         <div className={cn(successMsg && 'hidden')}>
