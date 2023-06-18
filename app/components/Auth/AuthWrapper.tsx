@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "../AuthProvider";
 import Auth from ".";
 import Card from "../Card";

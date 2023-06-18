@@ -1,50 +1,34 @@
 "use client";
 
-import AuthWrapper from "@/app/components/Auth/AuthWrapper";
-import { Group, getGroupById } from "@/lib/gql/group";
-import { Container, Text, Stack, Skeleton } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import UserAvatar from "@/app/components/UserAvatar";
+import { Button, Container, Text, Stack, Skeleton, Box, AvatarGroup, Avatar, Flex, Spacer } from "@chakra-ui/react";
+import { useGroup } from "../context/group";
 
-interface GroupHomeProps {
-    params: GroupHomeParams
-}
-
-interface GroupHomeParams {
-    groupid: string
-}
-
-const GroupHome = ({ params } : GroupHomeProps) => {
-    const [group, setGroup] = useState<Group | null>(null);
-
-    useEffect(() => {
-        const getData = async () => {
-            const data: Group = await getGroupById(parseInt(params.groupid));
-            setGroup(data);
-        };
-        getData();
-        
-    }, [params])
+const GroupHome = () => {
+    const { group } = useGroup();
 
     return (
-        <AuthWrapper required={true}>
-            <Container maxWidth={"3xl"}>
-            {
-                !group &&
-                <Stack>
-                    <Skeleton height="100px" />
-                    <Skeleton height="50px" />
-                    <Skeleton height="1000px" />
-                </Stack>
-            }
-            {
-                group &&
-                <>
-                    <Text fontWeight="700" fontSize="3xl">{group.name}</Text>
-                    <p>{ group.members.length }</p>
-                </>
-            }
-            </Container>
-        </AuthWrapper>
+        <>
+        {
+            !group &&
+            <Stack>
+                <Skeleton height="50px" />
+                <Skeleton height="1000px" />
+            </Stack>
+        }
+        {
+            group &&
+            <Stack direction="column">
+                <Box>
+                    <Flex alignItems={"center"}>
+                        <Text fontSize="2xl">Interested and Confirmed Shows</Text>
+                        <Spacer />
+                        <Button colorScheme="green" variant="outline">Add Show</Button>
+                    </Flex>
+                </Box>
+            </Stack>
+        }
+        </>
     )
 }
 
