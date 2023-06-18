@@ -1,23 +1,26 @@
 "use client";
 
-import { AvatarGroup, Box, Button, ButtonGroup, Flex, Grid, GridItem, Heading, SimpleGrid, Skeleton, Spacer, Stack, Text } from "@chakra-ui/react";
+import { AvatarGroup, Box, Button, ButtonGroup, Flex, Grid, GridItem, Heading, SimpleGrid, Skeleton, Spacer, Stack, Text, Tabs, TabList, Tab } from "@chakra-ui/react";
 import { useGroup } from "../../context/group";
 import UserAvatar from "@/app/components/UserAvatar";
+import { useRouter } from "next/navigation";
 
 const GroupHeader = () => {
     const { group } = useGroup();
+    const router = useRouter();
 
     return (
         <>
         {
             !group &&
-            <Skeleton>
+            <Skeleton mb={1}>
                 <Skeleton height="100px" />
             </Skeleton>
         }
         {
             group && 
-            <Box bg="gray.900" p="4">
+            <>
+            <Box bg="gray.900" p="4" mb="1">
                 <Grid templateColumns={{
                     base: 'repeat(1, 1fr)',
                     sm: 'repeat(3, 1fr)',
@@ -66,6 +69,16 @@ const GroupHeader = () => {
                     </GridItem>
                 </Grid>
             </Box>
+            <Box bg="gray.900" p="4">
+                <Tabs isFitted colorScheme="pink" align="center">
+                    <TabList>
+                        <Tab onClick={() => { router.push(`/group/${group.id}`) }}>Home</Tab>
+                        <Tab onClick={() => { router.push(`/group/${group.id}/shows`) }}>Shows</Tab>
+                        <Tab onClick={() => { router.push(`/group/${group.id}/members`) }}>Members</Tab>
+                    </TabList>
+                </Tabs>
+            </Box>
+            </>
         }
         </>
     );

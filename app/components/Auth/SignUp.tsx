@@ -23,6 +23,7 @@ const SignUp = () => {
     const { setView } = useAuth();
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     async function signUp(formData: any) {
         setSuccessMsg('');
