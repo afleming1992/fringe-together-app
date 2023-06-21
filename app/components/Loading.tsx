@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Spinner, Container, Text } from "@chakra-ui/react";
 
 const Loading = () => {

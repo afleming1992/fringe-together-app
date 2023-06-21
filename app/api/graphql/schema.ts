@@ -22,10 +22,15 @@ type GroupMembership {
     admin: Boolean
 }
 
+type Show {
+
+}
+
 type Query {
     me: User
     group(id: Int!): Group
     groups: [Group]
+    showDetails: ShowDetails
 }
 
 type Mutation {
