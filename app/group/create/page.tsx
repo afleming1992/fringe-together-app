@@ -40,7 +40,7 @@ const CreateGroup = () => {
                                         )}
                                     </Field>
                                 </Stack>
-                                <Button isDisabled={!touched && errors != null} mt={4} variant="solid" bg="pink.500">
+                                <Button isDisabled={!touched && errors != null} mt={4} colorScheme='pink'>
                                     Submit
                                 </Button>
                             </Box>

@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 import { GroupProvider } from "../context/group"
 import AuthWrapper from "@/app/components/Auth/AuthWrapper"
 import ContainerWrapper from "@/app/components/ContainerWrapper"
-import GroupHeader from "./components/GroupHeader"
+import GroupPageWrapper from "./components/GroupPageWrapper"
 
 interface GroupLayoutProps {
     children: ReactNode,
@@ -18,8 +18,9 @@ const GroupLayout = async ({children, params}: GroupLayoutProps) => {
         <AuthWrapper required={true}>
             <ContainerWrapper width="6xl">
                 <GroupProvider groupId={parseInt(params.groupid)}> 
-                    <GroupHeader />
-                    {children}
+                    <GroupPageWrapper>
+                        {children}
+                    </GroupPageWrapper>
                 </GroupProvider>
             </ContainerWrapper>
         </AuthWrapper>

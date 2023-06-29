@@ -1,7 +1,5 @@
-import { User } from "@prisma/client";
-import { Context } from "../utils";
+import { Show, getShow } from "@/lib/gql/show_remote";
 import { GraphQLContext } from "../context";
-import { AnyMxRecord } from "dns";
 
 export const Query = {
     async me(parent: any, args: any, ctx: GraphQLContext) {
@@ -55,5 +53,14 @@ export const Query = {
                 }
             }
         })
+    },
+    async show(parent: any, args: {uri: string}, ctx: GraphQLContext) {
+        if(ctx.currentUser === null) {
+            throw new Error("Unauthenticated");
+        }
+
+        const show: Show = await getShow(args.uri);
+
+        return show;
     }
 }

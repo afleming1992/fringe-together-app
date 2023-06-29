@@ -4,8 +4,13 @@ import { AvatarGroup, Box, Button, ButtonGroup, Flex, Grid, GridItem, Heading, S
 import { useGroup } from "../../context/group";
 import UserAvatar from "@/app/components/UserAvatar";
 import { useRouter } from "next/navigation";
+import { AddShowProvider } from "./AddShowProvider";
 
-const GroupHeader = () => {
+interface GroupPageWrapperProps {
+    children: any
+}
+
+const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
     const { group } = useGroup();
     const router = useRouter();
 
@@ -73,10 +78,16 @@ const GroupHeader = () => {
                 <Tabs isFitted colorScheme="pink" align="center">
                     <TabList>
                         <Tab onClick={() => { router.push(`/group/${group.id}`) }}>Home</Tab>
-                        <Tab onClick={() => { router.push(`/group/${group.id}/shows`) }}>Shows</Tab>
+                        <Tab onClick={() => { router.push(`/group/${group.id}/booked`) }}>Shows</Tab>
+                        <Tab onClick={() => { router.push(`/group/${group.id}/ideas`) }}>Show Ideas</Tab>
                         <Tab onClick={() => { router.push(`/group/${group.id}/members`) }}>Members</Tab>
                     </TabList>
                 </Tabs>
+            </Box>
+            <Box bg="gray.900" p="4">
+                <AddShowProvider>
+                    {children}
+                </AddShowProvider>
             </Box>
             </>
         }
@@ -85,4 +96,4 @@ const GroupHeader = () => {
 
 }
 
-export default GroupHeader;
+export default GroupPageWrapper;

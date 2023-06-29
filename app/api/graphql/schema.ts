@@ -23,14 +23,21 @@ type GroupMembership {
 }
 
 type Show {
-
+    id: String!,
+    uri: String!,
+    title: String!,
+    location: String,
+    duration: String,
+    description: String,
+    showRun: String,
+    availableShows: [String]
 }
 
 type Query {
     me: User
     group(id: Int!): Group
     groups: [Group]
-    showDetails: ShowDetails
+    show(uri: String!): Show
 }
 
 type Mutation {
