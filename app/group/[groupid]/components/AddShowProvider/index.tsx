@@ -1,7 +1,8 @@
-import { Show } from "@/lib/gql/show_remote";
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent,  ModalFooter,  ModalHeader,  ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader,  ModalOverlay, useDisclosure } from "@chakra-ui/react";
 import { createContext, useContext, useMemo, useState } from "react";
 import GetShowForm from "./GetShowForm";
+import { Show } from "@/lib/gql/types";
+import GetShowConfirmation from "./GetShowConfirmation";
 
 interface AddShowProviderProps {
     children: any
@@ -23,9 +24,26 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
         }
     }, [onOpen]);
 
+    const onModalClose = () => {
+        setShow(null);
+        onClose();
+    }
+
+    const confirmedBooked = (date: Date) => {
+
+    }
+
+    const confirmedInterested = (date?: Date | null = null) => {
+
+    }
+
+    const confirmedNo = () => {
+        setShow(null)
+    }
+
     return (
         <AddShowContext.Provider value={value} {...props}>
-            <Modal size="xl" isOpen={isOpen} onClose={onClose}>
+            <Modal size="xl" isOpen={isOpen} onClose={onModalClose} closeOnOverlayClick={false}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Add a Show</ModalHeader>
@@ -34,6 +52,10 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
                         {
                             !show &&
                             <GetShowForm setShow={setShow} />
+                        }
+                        {
+                            show &&
+                            <GetShowConfirmation  mation show={show} confirmBooked={confirmedBooked} confirmInterested={confirmedInterested} confirmNo={confirmedNo} />
                         }
                     </ModalBody>
                 </ModalContent>

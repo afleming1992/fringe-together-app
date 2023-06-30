@@ -31,7 +31,7 @@ const CreateGroup = () => {
                                         Create a Group
                                     </Text>
                                     <Field name='name'>
-                                        {({ field, form }) => (
+                                        {({ field, form }: any) => (
                                             <FormControl isInvalid={form.errors.name && form.touched.name}>
                                                 <FormLabel>Group Name</FormLabel>
                                                 <Input {...field} placeholder='name' />

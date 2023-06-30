@@ -11,7 +11,8 @@ export const getShowQuery = gql`
             location,
             duration,
             description,
-            availableShows
+            availableShows,
+            showRun
         }
     }
 `

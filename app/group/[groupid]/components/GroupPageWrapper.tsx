@@ -75,7 +75,7 @@ const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
                 </Grid>
             </Box>
             <Box bg="gray.900" p="4">
-                <Tabs isFitted colorScheme="pink" align="center">
+                <Tabs isFitted variant="solid-rounded" colorScheme="pink" align="center">
                     <TabList>
                         <Tab onClick={() => { router.push(`/group/${group.id}`) }}>Home</Tab>
                         <Tab onClick={() => { router.push(`/group/${group.id}/booked`) }}>Shows</Tab>
