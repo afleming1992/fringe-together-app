@@ -85,7 +85,7 @@ const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
                 </Tabs>
             </Box>
             <Box bg="gray.900" p="4">
-                <AddShowProvider>
+                <AddShowProvider group={group}>
                     {children}
                 </AddShowProvider>
             </Box>

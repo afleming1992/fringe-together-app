@@ -26,6 +26,7 @@ const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}
     
     const onInterestedClick = (formData: any) => {
         setInterestedSubmitting(true);
+        confirmInterested();
     }
 
     const onAlreadyBookedSubmit = (formData: any) => {
@@ -72,7 +73,7 @@ const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}
                                     {({ field, form }: FieldProps) => (
                                         <FormControl my={2}>
                                             <FormLabel>Date Booked</FormLabel>
-                                            <Select onChange={field.onChange} name="date" placeholder="Select showing">
+                                            <Select isDisabled={alreadyBookedSubmitting} onChange={field.onChange} name="date" placeholder="Select showing">
                                                 {
                                                     show.availableShows.map((availableShow) => {
                                                         const date = new Date(availableShow);

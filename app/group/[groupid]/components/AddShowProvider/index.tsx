@@ -3,8 +3,12 @@ import { createContext, useContext, useMemo, useState } from "react";
 import GetShowForm from "./GetShowForm";
 import { Show } from "@/lib/gql/types";
 import GetShowConfirmation from "./GetShowConfirmation";
+import { Group, addShowInterest } from "@/lib/gql/group";
+import { GroupShowInterestType } from "@prisma/client";
+import { useRouter } from "next/router";
 
 interface AddShowProviderProps {
+    group: Group,
     children: any
 }
 
@@ -14,7 +18,7 @@ export interface AddShowContextData {
 
 export const AddShowContext = createContext<AddShowContextData>({openModal: () => {}})
 
-export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => {
+export const AddShowProvider = ({children, group, ...props} : AddShowProviderProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ show, setShow ] = useState<Show | null>();
 
@@ -33,8 +37,14 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
 
     }
 
-    const confirmedInterested = (date?: Date | null = null) => {
+    const confirmedInterested = async (date?: Date | null) => {
+        if(show) {
+            const result = await addShowInterest(group.id, GroupShowInterestType.INTERESTED, show?.uri, date);
 
+            if(result) {
+                onModalClose();
+            }
+        }
     }
 
     const confirmedNo = () => {
@@ -55,7 +65,7 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
                         }
                         {
                             show &&
-                            <GetShowConfirmation  mation show={show} confirmBooked={confirmedBooked} confirmInterested={confirmedInterested} confirmNo={confirmedNo} />
+                            <GetShowConfirmation show={show} confirmBooked={confirmedBooked} confirmInterested={confirmedInterested} confirmNo={confirmedNo} />
                         }
                     </ModalBody>
                 </ModalContent>

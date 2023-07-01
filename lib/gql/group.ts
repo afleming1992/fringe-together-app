@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import apollo from '@/lib/apollo/client';
 import { User } from "./user";
+import { GroupShowInterest, GroupShowInterestType } from "@prisma/client";
 
 export interface Group {
     id: number
@@ -65,4 +66,35 @@ export const getGroupsQuery = gql`
             }
         }
     }
+`   
+
+export const addShowInterestMutation = gql`
+    mutation addShowInterest($groupId: Int!, $showUri: String!, $type: GroupShowInterestType!) {
+        addShowInterest(groupId: $groupId, showUri: $showUri, type: $type) {
+            id,
+                type,
+                showUri
+                group {
+                    id
+                }
+        }
+    }
 `
+
+export const addShowInterest = async (groupId: number, type: GroupShowInterestType, showUri: string, date?: Date | null): Promise<Boolean> => {
+    const { errors } = await apollo.mutate({
+        mutation: addShowInterestMutation,
+        variables: {
+            groupId: groupId,
+            type,
+            showUri,
+            date,
+        }
+    });
+
+    if(errors) {
+        throw new Error(errors[0].message);
+    }
+    
+    return true;
+}

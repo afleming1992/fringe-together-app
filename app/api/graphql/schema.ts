@@ -9,11 +9,10 @@ type User {
 }
 
 type Group {
-    id: ID!
+    id: Int!
     name: String
     members: [GroupMembership]
-    # interested_events: [GroupEventInterest]
-    # confirmed_events: [GroupConfirmedEvents]
+    interestedEvents: [GroupShowInterest]
 }
 
 type GroupMembership {
@@ -33,6 +32,21 @@ type Show {
     availableShows: [String]
 }
 
+type GroupShowInterest {
+    id: Int!,
+    type: GroupShowInterestType!,
+    showUri: String!,
+    date: String,
+    user: User,
+    group: Group
+}
+
+enum GroupShowInterestType {
+    INTERESTED
+    INTERESTED_IN_DATE
+    BOOKED
+}
+
 type Query {
     me: User
     group(id: Int!): Group
@@ -41,8 +55,12 @@ type Query {
 }
 
 type Mutation {
+    # User Mutations
     createUser(uid: ID!, first_name: String!, last_name: String!): User
+
+    # Group Mutations
     createGroup(name: String!): Group
+    addShowInterest(groupId: Int!, showUri: String!, type: GroupShowInterestType!, date: String): GroupShowInterest
 }
 `
 
