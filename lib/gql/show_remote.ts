@@ -48,6 +48,10 @@ export const getShow = async (uri: String) : Promise<Show> => {
         }
     });
 
+    if(error) {
+        throw new Error(error.message);
+    }
+
     return toShow(data.show);
 }
 

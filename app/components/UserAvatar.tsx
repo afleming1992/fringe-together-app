@@ -14,7 +14,7 @@ interface UserAvatarProps {
 const UserAvatar = ({user, ref, size = "sm", showName = false}: UserAvatarProps) => {
     if(user) {
         return (
-            <Avatar size={size} ref={ref} name={`${user.first_name} ${user.last_name}`} src={`${user.profile_pic}`} />
+            <Avatar size={size} ref={ref} name={`${user.firstName} ${user.lastName}`} src={`${user.profilePic}`} />
         )
     } else {
         return (

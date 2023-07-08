@@ -1,8 +1,10 @@
-import { GroupShowInterestType, PrismaClient, User } from '@prisma/client';
+import { Group, GroupShowInterestType, PrismaClient, User } from '@prisma/client';
 import { GraphQLContext } from '../../context';
 import { Context } from '../../utils';
 import { createTextChangeRange } from 'typescript';
 import { group } from 'console';
+import { getShow } from '@/lib/gql/show_remote';
+import { GroupShow, ShowInfo } from '@/lib/gql/types';
 
 interface CreateGroupArgs {
     name: string
@@ -30,24 +32,30 @@ export enum AddShowType {
 const addUserToGroup = (prisma: PrismaClient, groupId: number, user: User, isAdmin: boolean = false) => {
     return prisma.groupMembership.create({
         data: {
-            group_id: groupId,
-            user_uid: user.uid,
+            groupId,
+            userUid: user.uid,
             admin: isAdmin
         }
     })
 }
 
-const confirmUserInGroup = async (prisma: PrismaClient, groupId: number, user_uid: string) => {
-    const groupMembership = await prisma.groupMembership.findFirst({
+const getGroupUsingUser = async (prisma: PrismaClient, groupId: number, userUid: string): Promise<Group> => {
+    const group = await prisma.group.findFirst({
         where: {
-            group_id: groupId,
-            user_uid: user.uid
+            id: groupId,
+            members: {
+                some: {
+                    userUid
+                }
+            }
         }
     });
 
-    if(groupMembership == null) {
+    if(group == null) {
         throw new Error("User is not a member of this group")
     }
+
+    return group
 }
 
 const mutators = {
@@ -91,23 +99,72 @@ const mutators = {
         if (type != AddShowType.INTERESTED && date == null) {
             throw new Error("Date is required if INTERESTED_IN_DATE or BOOKED")
         }
+
+        const show = await getShow(showUri);
         
-        confirmUserInGroup(ctx.prisma, groupId, ctx.currentUser.id);
-        
-        const showInterest = await ctx.prisma.groupShowInterest.create({
-            data: {
-                type,
-                showUri,
-                date: date?.toISOString(),
-                user_uid: ctx.currentUser.id,
-                group_id: groupId
+        const group = await getGroupUsingUser(ctx.prisma, groupId, ctx.currentUser.id);
+
+        const showInfo = await ctx.prisma.showInfo.upsert({
+            where: {
+                uri: showUri
             },
-            include: {
-                group: true
+            update: {},
+            create: {
+                uri: showUri,
+                title: show.title,
+                location: show.location
+            }
+        })
+
+        const groupShow = await ctx.prisma.groupShow.findFirst({
+            where: {
+                show: {
+                    uri: show.uri
+                },
+                group: {
+                    id: group.id
+                }
             }
         });
 
-        return showInterest;
+        const interestData = {
+            type,
+            date: date?.toISOString(),
+            userUid: ctx.currentUser.id
+        }
+
+        if(groupShow == null) {
+            return await ctx.prisma.groupShow.create({
+                data: {
+                    groupId: group.id,
+                    showUri: show.uri,
+                    interest: {
+                        create: [
+                            interestData
+                        ]
+                    }
+                },
+                include: {
+                    show: true
+                }
+            })
+        } else {
+            return await ctx.prisma.groupShow.update({
+                where: {
+                    id: groupShow.id
+                },
+                data: {
+                    interest: {
+                        create: [
+                            interestData
+                        ]
+                    }
+                },
+                include: {
+                    show: true
+                }
+            })
+        }
     }
 }
 

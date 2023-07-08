@@ -10,44 +10,59 @@ datasource db {
 
 model User {
   uid                     String                @id
-  first_name              String
-  last_name               String
-  profile_pic             String?
+  firstName                String
+  lastName                String
+  profilePic              String?
   groups                  GroupMembership[]
-  interested_show         GroupShowInterest[]
+  interestedShow          GroupShowInterest[]
 }
 
 model GroupMembership {
-  group_id   Int
-  group      Group    @relation(fields: [group_id], references: [id], onDelete: Cascade)
-  user_uid   String
-  user       User     @relation(fields: [user_uid], references: [uid], onDelete: Cascade)
+  groupId    Int
+  group      Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userUid    String
+  user       User     @relation(fields: [userUid], references: [uid], onDelete: Cascade)
   admin      Boolean
-  created_at DateTime @default(now())
+  createdAt  DateTime @default(now())
 
-  @@id([group_id, user_uid])
+  @@id([groupId, userUid])
 }
 
 model Group {
   id                Int                    @id @default(autoincrement())
   name              String
   members           GroupMembership[]
-  created_at        DateTime               @default(now())
-  updated_at        DateTime               @updatedAt
-  interested_events GroupShowInterest[]
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  shows             GroupShow[]            
+}
+
+model ShowInfo {
+  uri               String                  @id
+  title             String
+  location          String
+  groupsInterested  GroupShow[]
+}
+
+model GroupShow {
+  id                Int                     @id @default(autoincrement())
+  groupId         Int             
+  group             Group                   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  showUri          String
+  show              ShowInfo                @relation(fields: [showUri], references: [uri], onDelete: Cascade)
+  interest          GroupShowInterest[]
 }
 
 model GroupShowInterest {
   id                Int                     @id @default(autoincrement())
+  groupShowId       Int             
+  groupShow         GroupShow               @relation(fields: [groupShowId], references: [id])
   type              GroupShowInterestType
-  showUri           String
   date              DateTime?                
-  user              User                    @relation(fields: [user_uid], references: [uid], onDelete: Cascade)
-  user_uid          String
-  group             Group                   @relation(fields: [group_id], references: [id], onDelete: Cascade)
-  group_id          Int
-  created_at        DateTime                @default(now())
-  updated_at        DateTime                @updatedAt
+  user              User                    @relation(fields: [userUid], references: [uid], onDelete: Cascade)
+  userUid           String
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
 }
 
 enum GroupShowInterestType {

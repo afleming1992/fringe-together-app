@@ -36,7 +36,7 @@ const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}
 
     return (
         <>
-            <ShowPreviewCard showDescription={false} showCta={false} show={show} />
+            <ShowPreviewCard showDescription={true} showCta={true} show={show} />
             <Divider my={2} />
             {
                 !confirmed &&
@@ -55,7 +55,9 @@ const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}
                 <Box mb={2} textAlign={"center"}>
                     <Text fontWeight={"bold"} mb={2}>Are you interested in this show or have you booked tickets already?</Text>
                     <Button isLoading={interestedSubmitting} loadingText="Submitting" onClick={onInterestedClick} my={2} colorScheme="blue" size="lg" width="full">I&apos;m interested</Button>
-                    <Button isDisabled={interestedSubmitting} onClick={() => {setAlreadyBooked(true)}} my={2} colorScheme="green" size="lg" width="full">I&apos;ve already booked tickets!</Button>
+                    {/*
+                        <Button isDisabled={interestedSubmitting} onClick={() => {setAlreadyBooked(true)}} my={2} colorScheme="green" size="lg" width="full">I&apos;ve already booked tickets!</Button>
+                    */}
                 </Box>
             }
             {

@@ -1,5 +1,7 @@
 import { Show, getShow } from "@/lib/gql/show_remote";
 import { GraphQLContext } from "../context";
+import { GroupShow } from "@/lib/gql/types";
+import { GroupShowInterest } from "@prisma/client";
 
 export const Query = {
     async me(parent: any, args: any, ctx: GraphQLContext) {
@@ -18,7 +20,7 @@ export const Query = {
             where: {
                 members: {
                     some: {
-                        user_uid: ctx.currentUser.id
+                        userUid: ctx.currentUser.id
                     }
                 }
             },
@@ -36,12 +38,12 @@ export const Query = {
             throw new Error("Unauthenticated");
         }
 
-        return await ctx.prisma.group.findFirst({
+        return ctx.prisma.group.findFirst({
             where: {
                 id: args.id,
                 members: {
                     some: {
-                        user_uid: ctx.currentUser.id
+                        userUid: ctx.currentUser.id
                     }
                 },
             },
@@ -50,9 +52,19 @@ export const Query = {
                     include: {
                         user: true
                     }
+                },
+                shows: {
+                    include: {
+                        show: true,
+                        interest: {
+                            include: {
+                                user: true
+                            }
+                        }
+                    }
                 }
             }
-        })
+        });
     },
     async show(parent: any, args: {uri: string}, ctx: GraphQLContext) {
         if(ctx.currentUser === null) {

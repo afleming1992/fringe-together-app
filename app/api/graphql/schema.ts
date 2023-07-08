@@ -3,16 +3,29 @@ import gql from "graphql-tag";
 const schema = gql`
 type User {
     uid: ID!
-    first_name: String!
-    last_name: String!
-    profile_pic: String
+    firstName: String!
+    lastName: String!
+    profilePic: String
 }
 
 type Group {
     id: Int!
     name: String
     members: [GroupMembership]
-    interestedEvents: [GroupShowInterest]
+    shows: [GroupShow]
+}
+
+type GroupShow {
+    id: Int!
+    show: ShowInfo
+    interest: [GroupShowInterest]
+}
+
+type GroupShowInterest {
+    id: Int!
+    type: GroupShowInterestType
+    user: User
+    date: String
 }
 
 type GroupMembership {
@@ -32,13 +45,10 @@ type Show {
     availableShows: [String]
 }
 
-type GroupShowInterest {
-    id: Int!,
-    type: GroupShowInterestType!,
-    showUri: String!,
-    date: String,
-    user: User,
-    group: Group
+type ShowInfo {
+    uri: String!
+    title: String!
+    location: String!
 }
 
 enum GroupShowInterestType {
@@ -60,7 +70,7 @@ type Mutation {
 
     # Group Mutations
     createGroup(name: String!): Group
-    addShowInterest(groupId: Int!, showUri: String!, type: GroupShowInterestType!, date: String): GroupShowInterest
+    addShowInterest(groupId: Int!, showUri: String!, type: GroupShowInterestType!, date: String): GroupShow
 }
 `
 

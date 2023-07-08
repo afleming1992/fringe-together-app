@@ -1,6 +1,6 @@
 "use client";
 
-import { AvatarGroup, Box, Button, ButtonGroup, Flex, Grid, GridItem, Heading, SimpleGrid, Skeleton, Spacer, Stack, Text, Tabs, TabList, Tab } from "@chakra-ui/react";
+import { AvatarGroup, Box, Button, ButtonGroup, Flex, Grid, GridItem, Heading, SimpleGrid, Skeleton, Spacer, Stack, Text, Tabs, TabList, Tab, TabPanels } from "@chakra-ui/react";
 import { useGroup } from "../../context/group";
 import UserAvatar from "@/app/components/UserAvatar";
 import { useRouter } from "next/navigation";
@@ -73,16 +73,6 @@ const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
                         </Flex>
                     </GridItem>
                 </Grid>
-            </Box>
-            <Box bg="gray.900" p="4">
-                <Tabs isFitted variant="solid-rounded" colorScheme="pink" align="center">
-                    <TabList>
-                        <Tab onClick={() => { router.push(`/group/${group.id}`) }}>Home</Tab>
-                        <Tab onClick={() => { router.push(`/group/${group.id}/booked`) }}>Shows</Tab>
-                        <Tab onClick={() => { router.push(`/group/${group.id}/ideas`) }}>Show Ideas</Tab>
-                        <Tab onClick={() => { router.push(`/group/${group.id}/members`) }}>Members</Tab>
-                    </TabList>
-                </Tabs>
             </Box>
             <Box bg="gray.900" p="4">
                 <AddShowProvider group={group}>

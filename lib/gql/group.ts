@@ -42,9 +42,9 @@ export const getGroupByIdQuery = gql`
             members {
                 admin
                 user {
-                    first_name
-                    last_name
-                    profile_pic
+                    firstName
+                    lastName
+                    profilePic
                 }
             }
         }
@@ -59,9 +59,9 @@ export const getGroupsQuery = gql`
             members {
                 admin
                 user {
-                    first_name
-                    last_name
-                    profile_pic
+                    firstName
+                    lastName
+                    profilePic
                 }
             }
         }
@@ -72,11 +72,11 @@ export const addShowInterestMutation = gql`
     mutation addShowInterest($groupId: Int!, $showUri: String!, $type: GroupShowInterestType!) {
         addShowInterest(groupId: $groupId, showUri: $showUri, type: $type) {
             id,
-                type,
-                showUri
-                group {
-                    id
-                }
+            show {
+                uri,
+                title,
+                location
+            }
         }
     }
 `

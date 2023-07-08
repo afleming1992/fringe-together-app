@@ -97,7 +97,6 @@ export const AuthProvider = ({ accessToken, ...props }: AuthProviderProps) => {
                         uid: user?.id
                     }
                 })
-    
                 setProfile(me);
             } else {
                 setProfile(null);
