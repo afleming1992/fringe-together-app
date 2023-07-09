@@ -3,73 +3,71 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
 }
 
 model User {
   uid                     String                @id
-  first_name              String
-  last_name               String
-  profile_pic             String?
+  firstName                String
+  lastName                String
+  profilePic              String?
   groups                  GroupMembership[]
-  interested_group_events GroupEventInterest[]
-  confirmed_events        GroupConfirmedEvents[] 
+  interestedShow          GroupShowInterest[]
 }
 
 model GroupMembership {
-  group_id   Int
-  group      Group    @relation(fields: [group_id], references: [id])
-  user_uid   String
-  user       User     @relation(fields: [user_uid], references: [uid])
+  groupId    Int
+  group      Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userUid    String
+  user       User     @relation(fields: [userUid], references: [uid], onDelete: Cascade)
   admin      Boolean
-  created_at DateTime @default(now())
+  createdAt  DateTime @default(now())
 
-  @@id([group_id, user_uid])
+  @@id([groupId, userUid])
 }
 
 model Group {
   id                Int                    @id @default(autoincrement())
   name              String
   members           GroupMembership[]
-  created_at        DateTime               @default(now())
-  updated_at        DateTime               @updatedAt
-  interested_events GroupEventInterest[]   
-  confirmed_events  GroupConfirmedEvents[]
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  shows             GroupShow[]            
 }
 
-model Event {
-  id                 Int                  @id
-  event_slug         String               @unique
-  name               String
-  location           String
-  description        String
-  showings           EventShowing[]
-  GroupEventInterest GroupEventInterest[]
+model ShowInfo {
+  uri               String                  @id
+  title             String
+  location          String
+  groupsInterested  GroupShow[]
 }
 
-model EventShowing {
-  id                   Int                    @id
-  event_id             Int
-  event                Event                  @relation(fields: [event_id], references: [id])
-  time                 DateTime
-  groups_attending     GroupConfirmedEvents[]
+model GroupShow {
+  id                Int                     @id @default(autoincrement())
+  groupId         Int             
+  group             Group                   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  showUri          String
+  show              ShowInfo                @relation(fields: [showUri], references: [uri], onDelete: Cascade)
+  interest          GroupShowInterest[]
 }
 
-model GroupEventInterest {
-  id                 Int    @id
-  event              Event  @relation(fields: [eventId], references: [id])
-  eventId            Int
-  group              Group  @relation(fields: [groupId], references: [id])
-  groupId            Int
-  interested_members User[]
+model GroupShowInterest {
+  id                Int                     @id @default(autoincrement())
+  groupShowId       Int             
+  groupShow         GroupShow               @relation(fields: [groupShowId], references: [id])
+  type              GroupShowInterestType
+  date              DateTime?                
+  user              User                    @relation(fields: [userUid], references: [uid], onDelete: Cascade)
+  userUid           String
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
 }
 
-model GroupConfirmedEvents {
-  id               Int          @id
-  event_showings   EventShowing @relation(fields: [event_showing_id], references: [id])
-  event_showing_id Int
-  group            Group        @relation(fields: [groupId], references: [id])
-  groupId          Int
-  attendees        User[]
+enum GroupShowInterestType {
+  INTERESTED
+  INTERESTED_IN_DATE
+  BOOKED
 }
+

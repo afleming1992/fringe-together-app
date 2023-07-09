@@ -1,11 +1,15 @@
 import { gql } from "@apollo/client";
 import apollo from '@/lib/apollo/client';
 import { User } from "./user";
+import { GroupShowInterest, GroupShowInterestType } from "@prisma/client";
+import { GroupShow } from "./types";
+import { data } from "autoprefixer";
 
 export interface Group {
     id: number
     name: string
     members: GroupMembership[]
+    shows: GroupShow[]
 }
 
 export interface GroupMembership {
@@ -20,7 +24,7 @@ export const getGroups = async () => {
     return data.groups;
 }
 
-export const getGroupById = async (id: number): Promise<Group> => {
+export const getGroupById = async (id: number, invalidate: boolean = false): Promise<Group> => {
     const { data, error } = await apollo.query({
         query: getGroupByIdQuery,
         variables: {
@@ -41,9 +45,24 @@ export const getGroupByIdQuery = gql`
             members {
                 admin
                 user {
-                    first_name
-                    last_name
-                    profile_pic
+                    uid
+                    firstName
+                    lastName
+                    profilePic
+                }
+            },
+            shows {
+                show {
+                    uri
+                    title
+                    location
+                }
+                interest {
+                    date
+                    type
+                    user {
+                        uid
+                    }
                 }
             }
         }
@@ -58,11 +77,42 @@ export const getGroupsQuery = gql`
             members {
                 admin
                 user {
-                    first_name
-                    last_name
-                    profile_pic
+                    firstName
+                    lastName
+                    profilePic
                 }
             }
         }
     }
+`   
+
+export const addShowInterestMutation = gql`
+    mutation addShowInterest($groupId: Int!, $showUri: String!, $type: GroupShowInterestType!) {
+        addShowInterest(groupId: $groupId, showUri: $showUri, type: $type) {
+            id,
+            show {
+                uri,
+                title,
+                location
+            }
+        }
+    }
 `
+
+export const addShowInterest = async (groupId: number, type: GroupShowInterestType, showUri: string, date?: Date | null): Promise<GroupShow> => {
+    const { data, errors } = await apollo.mutate({
+        mutation: addShowInterestMutation,
+        variables: {
+            groupId: groupId,
+            type,
+            showUri,
+            date,
+        }
+    });
+
+    if(errors) {
+        throw new Error(errors[0].message);
+    }
+    
+    return data.addShowInterest;
+}

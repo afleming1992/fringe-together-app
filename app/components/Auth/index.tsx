@@ -1,17 +1,16 @@
 'use client';
 
 import { useAuth, VIEWS } from '../AuthProvider';
+import Loading from '../Loading';
 import ResetPassword from './ResetPassword';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 
 interface AuthProps {
-    view: {
-        initialView: string | undefined
-    }
+    initialView?: string | null
 }
 
-const Auth = ({view: initialView}: AuthProps) => {
+const Auth = ({initialView}: AuthProps) => {
     let { view } = useAuth();
 
     if ( initialView ) {
@@ -20,7 +19,7 @@ const Auth = ({view: initialView}: AuthProps) => {
 
     switch(view) {
         case VIEWS.LOADING:
-            return <div>Loading...</div>
+            return <Loading />
         case VIEWS.UPDATE_PASSWORD:
             return <>Update Password</>
         case VIEWS.FORGOTTEN_PASSWORD:

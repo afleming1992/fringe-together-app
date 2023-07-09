@@ -1,7 +1,6 @@
-import { User } from "@prisma/client";
-import { Context } from "../utils";
+import { getShow } from "@/lib/gql/show_remote";
 import { GraphQLContext } from "../context";
-import { AnyMxRecord } from "dns";
+import { Show } from "@/lib/gql/types";
 
 export const Query = {
     async me(parent: any, args: any, ctx: GraphQLContext) {
@@ -20,7 +19,7 @@ export const Query = {
             where: {
                 members: {
                     some: {
-                        user_uid: ctx.currentUser.id
+                        userUid: ctx.currentUser.id
                     }
                 }
             },
@@ -38,12 +37,12 @@ export const Query = {
             throw new Error("Unauthenticated");
         }
 
-        return await ctx.prisma.group.findFirst({
+        return ctx.prisma.group.findFirst({
             where: {
                 id: args.id,
                 members: {
                     some: {
-                        user_uid: ctx.currentUser.id
+                        userUid: ctx.currentUser.id
                     }
                 },
             },
@@ -52,8 +51,32 @@ export const Query = {
                     include: {
                         user: true
                     }
+                },
+                shows: {
+                    include: {
+                        show: true,
+                        interest: {
+                            include: {
+                                user: true
+                            }
+                        }
+                    },
+                    orderBy: {
+                        show: {
+                            title: 'asc'
+                        }
+                    }
                 }
             }
-        })
+        });
+    },
+    async show(parent: any, args: {uri: string}, ctx: GraphQLContext) {
+        if(ctx.currentUser === null) {
+            throw new Error("Unauthenticated");
+        }
+
+        const show: Show = await getShow(args.uri);
+
+        return show;
     }
 }

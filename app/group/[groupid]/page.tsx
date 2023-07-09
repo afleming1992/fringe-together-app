@@ -1,50 +1,46 @@
 "use client";
 
-import AuthWrapper from "@/app/components/Auth/AuthWrapper";
-import { Group, getGroupById } from "@/lib/gql/group";
-import { Container, Text, Stack, Skeleton } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 
-interface GroupHomeProps {
-    params: GroupHomeParams
-}
+import { Button, Flex, Stack, Skeleton, Tab, TabList, TabPanels, Tabs, TabPanel } from "@chakra-ui/react";
+import { useGroup } from "../context/group";
+import { useAddShow } from "./components/AddShowProvider";
+import GroupShowsList from "./components/GroupShowsList";
 
-interface GroupHomeParams {
-    groupid: string
-}
-
-const GroupHome = ({ params } : GroupHomeProps) => {
-    const [group, setGroup] = useState<Group | null>(null);
-
-    useEffect(() => {
-        const getData = async () => {
-            const data: Group = await getGroupById(parseInt(params.groupid));
-            setGroup(data);
-        };
-        getData();
-        
-    }, [params])
+const GroupHome = () => {
+    const { group, refresh } = useGroup();
+    const { openModal } = useAddShow();
 
     return (
-        <AuthWrapper required={true}>
-            <Container maxWidth={"3xl"}>
-            {
-                !group &&
-                <Stack>
-                    <Skeleton height="100px" />
-                    <Skeleton height="50px" />
-                    <Skeleton height="1000px" />
-                </Stack>
-            }
-            {
-                group &&
-                <>
-                    <Text fontWeight="700" fontSize="3xl">{group.name}</Text>
-                    <p>{ group.members.length }</p>
-                </>
-            }
-            </Container>
-        </AuthWrapper>
+        <>
+        {
+            !group &&
+            <Skeleton>
+                <Skeleton height="500px" />
+            </Skeleton>
+        }
+        {
+            group &&
+            <Stack direction="column">
+                <Tabs isFitted variant="solid-rounded" colorScheme="pink" >
+                    <TabList>
+                        <Tab>Shows ({group.shows.length})</Tab>
+                        <Tab>Members ({group.members.length})</Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <Flex alignItems={"center"}>
+                                <Button width="full" variant="outline" onClick={() => { openModal() }} colorScheme="green">Add Show</Button>
+                            </Flex>
+                            <GroupShowsList shows={group.shows} members={group.members} />
+                        </TabPanel>
+                        <TabPanel>
+                            <p>Members</p>
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
+            </Stack>
+        }
+        </>
     )
 }
 

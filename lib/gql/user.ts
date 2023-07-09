@@ -2,16 +2,16 @@ import { gql } from "@apollo/client";
 
 export interface User {
     uid: string,
-    first_name: string,
-    last_name: string
-    profile_pic: string | null
+    firstName: string,
+    lastName: string
+    profilePic: string | null
 }
 
 export const createUser = gql`
-    mutation createUserWithVariables($first_name: String!, $last_name: String!) {
-        createUser(first_name: $first_name, last_name: $last_name) {
-            first_name
-            last_name
+    mutation createUserWithVariables($uid: ID!, $firstName: String!, $lastName: String!) {
+        createUser(uid: $uid, firstName: $firstName, lastName: $lastName) {
+            firstName
+            lastName
             uid,
         }
     }
@@ -20,10 +20,10 @@ export const createUser = gql`
 export const getMe = gql`
     query getMe {
         me {
-            first_name,
-            last_name,
+            firstName,
+            lastName,
             uid,
-            profile_pic
+            profilePic
         }
     }
 `

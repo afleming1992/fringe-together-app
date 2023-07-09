@@ -1,21 +1,32 @@
 "use client";
 
 import { User } from "@/lib/gql/user";
-import { Avatar } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Stack } from "@chakra-ui/react";
+import { AnyMxRecord } from "dns";
+import { ReactNode } from "react";
 
 interface UserAvatarProps {
-    user: User | null
-    ref?: any
+    user: User | null | undefined
+    ref?: any,
+    size?: string,
+    showName?: boolean,
+    badge?: ReactNode
 }
 
-const UserAvatar = ({user, ref}: UserAvatarProps) => {
+const UserAvatar = ({user, ref, size = "sm", showName = false, badge = <></>}: UserAvatarProps) => {
     if(user) {
         return (
-            <Avatar size={"sm"} ref={ref} name={`${user.first_name} ${user.last_name}`} src={`${user.profile_pic}`} />
+            <Avatar size={size} ref={ref} name={`${user.firstName} ${user.lastName}`} src={`${user.profilePic}`}>
+                { badge }
+            </Avatar>
         )
     } else {
         return (
-            <Avatar />
+            <Avatar size={size}>
+                <AvatarBadge>
+                    {badge}
+                </AvatarBadge>
+            </Avatar>
         )
     }
    

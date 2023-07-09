@@ -1,7 +1,10 @@
+"use client";
+
 import { useAuth } from "../AuthProvider";
 import Auth from ".";
 import Card from "../Card";
 import { Box } from "@chakra-ui/react";
+import Loading from "../Loading";
 
 interface AuthRequiredWrapper {
     required: boolean,
@@ -11,14 +14,14 @@ interface AuthRequiredWrapper {
 const AuthWrapper = ({children, required}: AuthRequiredWrapper) => {
     const { initial, user, view, signOut } = useAuth();
 
-    if (initial) {
+    if (initial && required) {
         return <div className="mx-auto max-w-md">
-            <Box>Loading...</Box>
+            <Loading />
         </div>
     }
 
     if (!user && required || view != null) {
-        return <Auth view={view} />
+        return <Auth />
     } else {
         return <>
             {children}

@@ -8,6 +8,7 @@ import supabase from '@/lib/supabase/browser';
 
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
+import { Button, Heading, Text } from '@chakra-ui/react';
 
 const SignInSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -43,9 +44,10 @@ const SignIn = () => {
             >
                 {({ errors, touched }) => (
                     <Form className="w-full max-w-sm">
-                        <h1 className="text-3xl font-bold text-center mb-4 dark:text-white">Sign In</h1>
+                        <Heading as={"h1"} mb="1">Sign In</Heading>
+                        <Text>Not currently a member? <Button variant='link' onClick={() => setView(VIEWS.SIGN_UP)}>Sign Up Here</Button></Text>
                         {errorMsg && <div className="text-red-600 w-full text-center">{errorMsg}</div>}
-                        <div className="mb-4">
+                        <div className="mt-4 mb-4">
                             <label htmlFor="email" className="block text-sm font-bold mb-2">
                                 Email
                             </label>

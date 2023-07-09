@@ -2,17 +2,17 @@ import { Context } from "../../utils";
 
 interface CreateUserArgs {
     uid: string
-    first_name: string
-    last_name: string
+    firstName: string
+    lastName: string
 }
 
 const mutators = {
-    async createUser(parent: any,{uid, first_name, last_name}: CreateUserArgs, ctx: Context) {
+    async createUser(parent: any,{uid, firstName, lastName}: CreateUserArgs, ctx: Context) {
         return await ctx.prisma.user.create({
             data: {
                 uid,
-                first_name,
-                last_name
+                firstName,
+                lastName
             }
         })
     }
