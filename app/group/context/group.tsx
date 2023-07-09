@@ -5,9 +5,10 @@ import { ReactNode, createContext, useContext, useEffect, useMemo, useState } fr
 
 interface GroupContextData {
     group: Group | null
+    refresh: () => void
 }
 
-export const GroupContext = createContext<GroupContextData>({group: null})
+export const GroupContext = createContext<GroupContextData>({group: null, refresh: () => {}})
 
 interface GroupProviderProps {
     groupId: number,
@@ -16,22 +17,34 @@ interface GroupProviderProps {
 
 export const GroupProvider = ({groupId, ...props} : GroupProviderProps) => {
     const [group, setGroup] = useState<Group | null>(null);
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
 
     useEffect(() => {
+        console.log("Group");
+        setGroup(null);
         const getData = async () => {
-            if(groupId) {
+            if(groupId) { 
                 const data: Group = await getGroupById(groupId);
+                console.log(data);
                 setGroup(data);
             }
+            setIsRefreshing(false);
         };
+
         getData();
-    },[groupId])
+    },[groupId, isRefreshing])
 
     const value = useMemo(() => {
+        const triggerRefresh = () => {
+            console.log("Trigger Refresh");
+            setIsRefreshing(true);
+        }
+
         return {
-            group
+            group,
+            refresh: triggerRefresh
         };
-    }, [group]);
+    }, [group, setIsRefreshing]);
 
     return <GroupContext.Provider value={value} {...props} />
 }

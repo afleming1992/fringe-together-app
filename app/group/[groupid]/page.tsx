@@ -5,10 +5,10 @@ import { Button, Flex, Spacer, Container, Text, Stack, Skeleton, Box, Tab, TabLi
 import { useGroup } from "../context/group";
 import { useRouter } from "next/navigation";
 import { useAddShow } from "./components/AddShowProvider";
-import GroupShows from "./components/GroupShows";
+import GroupShowsList from "./components/GroupShowsList";
 
 const GroupHome = () => {
-    const { group } = useGroup();
+    const { group, refresh } = useGroup();
     const { openModal } = useAddShow();
 
     return (
@@ -22,19 +22,17 @@ const GroupHome = () => {
         {
             group &&
             <Stack direction="column">
-                <Tabs isFitted variant="solid-rounded" colorScheme="pink">
+                <Tabs isFitted variant="solid-rounded" colorScheme="pink" >
                     <TabList>
-                        <Tab>Interested Shows</Tab>
-                        <Tab>Members</Tab>
+                        <Tab>Shows ({group.shows.length})</Tab>
+                        <Tab>Members ({group.members.length})</Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel>
-                            <GroupShows />
                             <Flex alignItems={"center"}>
-                                <Text fontSize="2xl">Interested and Confirmed Shows</Text>
-                                <Spacer />
-                                <Button onClick={() => { openModal() }} colorScheme="green">Add Show</Button>
+                                <Button width="full" variant="outline" onClick={() => { openModal() }} colorScheme="green">Add Show</Button>
                             </Flex>
+                            <GroupShowsList shows={group.shows} members={group.members} />
                         </TabPanel>
                         <TabPanel>
                             <p>Members</p>

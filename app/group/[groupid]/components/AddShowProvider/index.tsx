@@ -6,6 +6,7 @@ import GetShowConfirmation from "./GetShowConfirmation";
 import { Group, addShowInterest } from "@/lib/gql/group";
 import { GroupShowInterestType } from "@prisma/client";
 import { useRouter } from "next/router";
+import { useGroup } from "@/app/group/context/group";
 
 interface AddShowProviderProps {
     group: Group,
@@ -18,7 +19,8 @@ export interface AddShowContextData {
 
 export const AddShowContext = createContext<AddShowContextData>({openModal: () => {}})
 
-export const AddShowProvider = ({children, group, ...props} : AddShowProviderProps) => {
+export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => {
+    const { group, refresh } = useGroup();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ show, setShow ] = useState<Show | null>();
 
@@ -43,6 +45,7 @@ export const AddShowProvider = ({children, group, ...props} : AddShowProviderPro
 
             if(result) {
                 onModalClose();
+                refresh();
             }
         }
     }

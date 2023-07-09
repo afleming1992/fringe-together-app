@@ -25,5 +25,16 @@ export interface ShowInfo {
 export interface GroupShowInterest {
     id: number
     type: GroupShowInterestType
+    user: UserUid
+    date?: Date | null
+}
 
+export interface UserUid {
+    uid: string
+}
+
+export enum GroupShowInterestType {
+    INTERESTED="INTERESTED",
+    INTERESTED_IN_DATE="INTERESTED_IN_DATE",
+    BOOKED="BOOKED",
 }

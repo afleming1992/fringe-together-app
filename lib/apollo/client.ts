@@ -6,7 +6,13 @@ const link = new HttpLink({
 
 const gqlapi = new ApolloClient({
     link,
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    defaultOptions: {
+        query: {
+            fetchPolicy: 'no-cache',
+            errorPolicy: 'all'
+        }
+    }
 });
 
 export default gqlapi;

@@ -61,6 +61,11 @@ export const Query = {
                                 user: true
                             }
                         }
+                    },
+                    orderBy: {
+                        show: {
+                            title: 'asc'
+                        }
                     }
                 }
             }

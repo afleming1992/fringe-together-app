@@ -8,6 +8,8 @@ import { VIEWS, useAuth } from '../AuthProvider';
 import SignedInMenu from './SignedInMenu';
 import { Box, Flex, IconButton, useColorModeValue, useDisclosure, Text, useBreakpointValue, Button, Stack, Collapse, Link, Popover, PopoverTrigger, PopoverContent, Container } from '@chakra-ui/react';
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
 
 interface NavbarProps {
     session: Session | null
@@ -31,14 +33,19 @@ const NavBar = () => {
                         flex={{ base:1, md: 'auto' }}
                         ml={{ base: -2 }}
                         display={{ base: 'flex', md: 'none' }}>
-                        <IconButton
+                        <IconButton as={NextLink}
+                            href={'/'}
+                            icon={<FontAwesomeIcon icon={faHome} />}
+                            variant='ghost'
+                            ></IconButton>
+                        {/* <IconButton
                             onClick={onToggle}
                             icon={
                             isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
                             }
                             variant={'ghost'}
                             aria-label={'Toggle Navigation'}
-                        />
+                        /> */}
                     </Flex>
                     <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
                         <Text

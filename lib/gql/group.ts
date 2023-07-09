@@ -2,11 +2,13 @@ import { gql } from "@apollo/client";
 import apollo from '@/lib/apollo/client';
 import { User } from "./user";
 import { GroupShowInterest, GroupShowInterestType } from "@prisma/client";
+import { GroupShow } from "./types";
 
 export interface Group {
     id: number
     name: string
     members: GroupMembership[]
+    shows: GroupShow[]
 }
 
 export interface GroupMembership {
@@ -21,7 +23,7 @@ export const getGroups = async () => {
     return data.groups;
 }
 
-export const getGroupById = async (id: number): Promise<Group> => {
+export const getGroupById = async (id: number, invalidate: boolean = false): Promise<Group> => {
     const { data, error } = await apollo.query({
         query: getGroupByIdQuery,
         variables: {
@@ -42,9 +44,24 @@ export const getGroupByIdQuery = gql`
             members {
                 admin
                 user {
+                    uid
                     firstName
                     lastName
                     profilePic
+                }
+            },
+            shows {
+                show {
+                    uri
+                    title
+                    location
+                }
+                interest {
+                    date
+                    type
+                    user {
+                        uid
+                    }
                 }
             }
         }

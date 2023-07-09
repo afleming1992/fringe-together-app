@@ -9,7 +9,7 @@ interface ContainerWrapperProps {
 
 const ContainerWrapper = ({children, width}: ContainerWrapperProps) => {
     return (
-        <Container maxWidth={width}>
+        <Container p={0} maxWidth={width}>
             {children}
         </Container>
     )
