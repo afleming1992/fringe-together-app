@@ -1,9 +1,8 @@
 "use client";
 
 
-import { Button, Flex, Spacer, Container, Text, Stack, Skeleton, Box, Tab, TabList, TabPanels, Tabs, TabPanel } from "@chakra-ui/react";
+import { Button, Flex, Stack, Skeleton, Tab, TabList, TabPanels, Tabs, TabPanel } from "@chakra-ui/react";
 import { useGroup } from "../context/group";
-import { useRouter } from "next/navigation";
 import { useAddShow } from "./components/AddShowProvider";
 import GroupShowsList from "./components/GroupShowsList";
 

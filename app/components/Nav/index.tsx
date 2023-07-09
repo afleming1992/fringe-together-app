@@ -2,12 +2,9 @@
 
 import NextLink from 'next/link';
 import { Session } from '@supabase/auth-helpers-nextjs';
-import supabase from '@/lib/supabase/server';
-import SignOut from '../SignOut';
 import { VIEWS, useAuth } from '../AuthProvider';
 import SignedInMenu from './SignedInMenu';
 import { Box, Flex, IconButton, useColorModeValue, useDisclosure, Text, useBreakpointValue, Button, Stack, Collapse, Link, Popover, PopoverTrigger, PopoverContent, Container } from '@chakra-ui/react';
-import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 
@@ -35,9 +32,11 @@ const NavBar = () => {
                         display={{ base: 'flex', md: 'none' }}>
                         <IconButton as={NextLink}
                             href={'/'}
-                            icon={<FontAwesomeIcon icon={faHome} />}
                             variant='ghost'
-                            ></IconButton>
+                            aria-label="Home"
+                        >
+                            <FontAwesomeIcon icon={faHome} />
+                        </IconButton>
                         {/* <IconButton
                             onClick={onToggle}
                             icon={

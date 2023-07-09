@@ -5,7 +5,6 @@ import { Show } from "@/lib/gql/types";
 import GetShowConfirmation from "./GetShowConfirmation";
 import { Group, addShowInterest } from "@/lib/gql/group";
 import { GroupShowInterestType } from "@prisma/client";
-import { useRouter } from "next/router";
 import { useGroup } from "@/app/group/context/group";
 
 interface AddShowProviderProps {
@@ -58,10 +57,8 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
     
 
     const confirmedBooked = (date: Date) => {
-
+            
     }
-
-   
 
     const confirmedNo = () => {
         setShow(null)
@@ -81,7 +78,7 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
                         }
                         {
                             show &&
-                            <GetShowConfirmation show={show} confirmBooked={confirmedBooked} confirmInterested={confirmedInterested} confirmNo={confirmedNo} />
+                            <GetShowConfirmation show={show} confirmBooked={confirmedBooked} confirmInterested={value.confirmInterested} confirmNo={confirmedNo} />
                         }
                     </ModalBody>
                 </ModalContent>

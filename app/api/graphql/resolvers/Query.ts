@@ -1,7 +1,6 @@
-import { Show, getShow } from "@/lib/gql/show_remote";
+import { getShow } from "@/lib/gql/show_remote";
 import { GraphQLContext } from "../context";
-import { GroupShow } from "@/lib/gql/types";
-import { GroupShowInterest } from "@prisma/client";
+import { Show } from "@/lib/gql/types";
 
 export const Query = {
     async me(parent: any, args: any, ctx: GraphQLContext) {

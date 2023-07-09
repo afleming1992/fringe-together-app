@@ -4,20 +4,16 @@ import AuthWrapper from "@/app/components/Auth/AuthWrapper"
 import ContainerWrapper from "@/app/components/ContainerWrapper"
 import GroupPageWrapper from "./components/GroupPageWrapper"
 
-interface GroupLayoutProps {
+export interface GroupLayoutProps {
     children: ReactNode,
-    params: GroupLayoutProps
+    groupId: string
 }
 
-interface GroupLayoutProps {
-    groupid: string
-}
-
-const GroupLayout = async ({children, params}: GroupLayoutProps) => {
+const GroupLayout = async ({children, groupId}: GroupLayoutProps) => {
     return (
         <AuthWrapper required={true}>
             <ContainerWrapper width="6xl">
-                <GroupProvider groupId={parseInt(params.groupid)}> 
+                <GroupProvider groupId={parseInt(groupId)}> 
                     <GroupPageWrapper>
                         {children}
                     </GroupPageWrapper>

@@ -12,7 +12,7 @@ const Dashboard = () => {
             <>
                 {
                     profile &&
-                    <Text fontWeight={"700"} fontSize={"3xl"}>Welcome back <span color="pink.400">{ profile.first_name }</span></Text>
+                    <Text fontWeight={"700"} fontSize={"3xl"}>Welcome back <span color="pink.400">{ profile.firstName }</span></Text>
                 }
                 {/* <div className="mt-2 w-full p-3">
                     <Box>

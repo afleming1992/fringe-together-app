@@ -2,7 +2,7 @@ import { getClient as getShowClient } from '@/lib/show_api';
 import { gql } from '@apollo/client';
 import { Show } from './types';
 
-interface ShowRemote {
+export interface ShowRemote {
     availability: AvailabilityRemote,
     date: string,
     description: string,
