@@ -120,18 +120,7 @@ const DesktopNav = (props: DesktopNavProps) => {
     return (
         <Stack direction={'row'} align={"center"} spacing={4}>
             <Box>
-                <Link
-                    p={2}
-                    href={'#'}
-                    fontSize={'sm'}
-                    fontWeight={500}
-                    color={linkColor}
-                    _hover={{
-                    textDecoration: 'none',
-                    color: linkHoverColor,
-                    }}> 
-                    Text
-                </Link>
+                
             </Box>
         </Stack>
     )
@@ -141,6 +130,6 @@ const MobileNav = () => {
     return (
         <></>
     )
-}
+} 
 
 export default NavBar;
