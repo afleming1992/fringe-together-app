@@ -46,7 +46,7 @@ const ShowPreviewCard = ({show, showDescription = true, showCta = true}: ShowPre
                                 <Button as={Link} href={show.uri} isExternal rightIcon={<ExternalLinkIcon />} variant='solid' colorScheme='green'>
                                     edfringe.com Page
                                 </Button>
-                                <ShowTicketLink showLink={show.uri} showDes />
+                                <ShowTicketLink showLink={show.uri} />
                             </ButtonGroup>
                         </CardFooter>
                     </>

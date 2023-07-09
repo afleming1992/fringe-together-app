@@ -9,7 +9,7 @@ import { Field, FieldProps, Form, Formik } from "formik";
 
 interface GetShowConfirmationProps {
     show: Show,
-    confirmInterested: (date?: Date) => void,
+    confirmInterested: (showUri: string, date?: Date) => void,
     confirmBooked: (date: Date) => void,
     confirmNo: () => void
 }
@@ -26,7 +26,7 @@ const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}
     
     const onInterestedClick = (formData: any) => {
         setInterestedSubmitting(true);
-        confirmInterested();
+        confirmInterested(show.uri);
     }
 
     const onAlreadyBookedSubmit = (formData: any) => {

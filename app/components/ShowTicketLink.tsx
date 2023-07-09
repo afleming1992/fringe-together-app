@@ -7,7 +7,7 @@ interface ShowTicketLinkProps {
     date?: Date | null
 }
 
-const ShowTicketLink = ({showLink, date = null}: ShowTicketLinkProps) => {
+export const getShowTicketLink = (showLink: string, date?: Date | null) => {
     let url = showLink;
     if(date) {
         url = url + `?day=${ date.toLocaleDateString().split('T')[0] }`
@@ -15,6 +15,12 @@ const ShowTicketLink = ({showLink, date = null}: ShowTicketLinkProps) => {
         // Fringe Website only opens the booking screen if there is a day so setting this so it opens the page
         url = url + `?day=01-08-2023`
     }
+
+    return url;
+}
+
+const ShowTicketLink = ({showLink, date = null}: ShowTicketLinkProps) => {
+    let url = getShowTicketLink(showLink, date)
    
     return (
         <Button as={Link} leftIcon={<FontAwesomeIcon icon={faTicket} />} colorScheme="pink" href={url} isExternal>

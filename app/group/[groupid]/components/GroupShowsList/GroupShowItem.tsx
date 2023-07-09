@@ -1,21 +1,23 @@
 import { GroupInterest, GroupInterestVariant } from "@/app/components/GroupInterest"
-import { GroupShow, ShowInfo } from "@/lib/gql/types"
-import { User } from "@/lib/gql/user"
-import { Avatar, AvatarGroup, Box, Button, Card, CardBody, CardHeader, Flex, Heading, Icon, Image, Text, useColorModeValue } from "@chakra-ui/react"
+import { GroupShow } from "@/lib/gql/types"
+import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { faClock, faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import GroupShowItemMenu from "./GroupShowItemMenu"
+import { GroupMembership } from "@/lib/gql/group"
+import { useAuth } from "@/app/components/AuthProvider"
 
 interface GroupShowItemProps {
     show: GroupShow
-    members: User[]
+    members: GroupMembership[]
 }
 
 const GroupShowItem = ({show, members}: GroupShowItemProps) => {
     let boxBg = useColorModeValue("white !important", "#111c44 !important");
     let secondaryBg = useColorModeValue("gray.50", "whiteAlpha.100");
     let mainText = useColorModeValue("gray.800", "white");
-    let iconBox = useColorModeValue("gray.100", "whiteAlpha.200");
-    let iconColor = useColorModeValue("brand.200", "white");
+
+    const { profile } = useAuth();
 
     return (
             <Flex
@@ -25,14 +27,15 @@ const GroupShowItem = ({show, members}: GroupShowItemProps) => {
               mb={2}>
               <Box p='20px'>
                 <Flex w='100%' mb='10px'>
-                  {/* <Image src='https://i.ibb.co/ZWxRPRq/Venus-Logo.png' me='auto' /> */}
+                  <Text fontWeight='600' color={mainText} w='100%' fontSize='2xl'>
+                      { show.show.title }
+                  </Text>
+                  {
+                      profile &&
+                      <GroupShowItemMenu groupShow={show} currentUser={profile} />
+                  }
                 </Flex>
                 <Box>
-                  <Flex>
-                    <Text fontWeight='600' color={mainText} w='100%' fontSize='2xl'>
-                        { show.show.title }
-                    </Text>
-                  </Flex>
                   <GroupInterest variant={GroupInterestVariant.OVERVIEW} interest={show.interest} members={members} />
                 </Box>
               </Box>

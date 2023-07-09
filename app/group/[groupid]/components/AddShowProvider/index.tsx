@@ -1,5 +1,5 @@
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader,  ModalOverlay, useDisclosure } from "@chakra-ui/react";
-import { createContext, useContext, useMemo, useState } from "react";
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader,  ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import GetShowForm from "./GetShowForm";
 import { Show } from "@/lib/gql/types";
 import GetShowConfirmation from "./GetShowConfirmation";
@@ -14,41 +14,54 @@ interface AddShowProviderProps {
 }
 
 export interface AddShowContextData {
-    openModal: any
+    openModal: any,
+    confirmInterested: any
 }
 
-export const AddShowContext = createContext<AddShowContextData>({openModal: () => {}})
+export const AddShowContext = createContext<AddShowContextData>({openModal: () => {}, confirmInterested: () => {}}) 
 
 export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => {
+    const toast = useToast();
     const { group, refresh } = useGroup();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ show, setShow ] = useState<Show | null>();
 
-    const value = useMemo(() => {
-        return {
-            openModal: () => onOpen(),
-        }
-    }, [onOpen]);
-
-    const onModalClose = () => {
+    const onModalClose = useCallback(() => {
         setShow(null);
         onClose();
-    }
+    },[setShow, onClose]);
+
+    const value = useMemo(() => {
+        const confirmedInterested = async (showUri: string, date?: Date | null) => {
+            if(group) {
+                const result = await addShowInterest(group.id, GroupShowInterestType.INTERESTED, showUri, date);
+    
+                if(result) {
+                    onModalClose();
+                    toast({
+                        status: 'success',
+                        position: 'top',
+                        title: 'Show Interest added!',
+                        description: `Your interest for ${result.show.title} has been registered!`
+                    })
+                    refresh();
+                }
+            }
+        }
+
+        return {
+            openModal: () => onOpen(),
+            confirmInterested: (showUri: string, date?: Date) => { confirmedInterested(showUri, date) }
+        }
+    }, [onOpen, group, refresh, onModalClose, toast]);
+
+    
 
     const confirmedBooked = (date: Date) => {
 
     }
 
-    const confirmedInterested = async (date?: Date | null) => {
-        if(show) {
-            const result = await addShowInterest(group.id, GroupShowInterestType.INTERESTED, show?.uri, date);
-
-            if(result) {
-                onModalClose();
-                refresh();
-            }
-        }
-    }
+   
 
     const confirmedNo = () => {
         setShow(null)

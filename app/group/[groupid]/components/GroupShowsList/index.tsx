@@ -8,9 +8,10 @@ import { GroupMembership } from "@prisma/client";
 interface GroupShowsListProps {
     shows: GroupShow[]
     members: GroupMembership[]
+    currentUser: User
 }
 
-const GroupShowsList = ({shows, members}: GroupShowsListProps) => {
+const GroupShowsList = ({shows, members, currentUser}: GroupShowsListProps) => {
     return (
         <Box mt={2}>
             {

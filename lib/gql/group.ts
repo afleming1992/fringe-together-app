@@ -3,6 +3,7 @@ import apollo from '@/lib/apollo/client';
 import { User } from "./user";
 import { GroupShowInterest, GroupShowInterestType } from "@prisma/client";
 import { GroupShow } from "./types";
+import { data } from "autoprefixer";
 
 export interface Group {
     id: number
@@ -98,8 +99,8 @@ export const addShowInterestMutation = gql`
     }
 `
 
-export const addShowInterest = async (groupId: number, type: GroupShowInterestType, showUri: string, date?: Date | null): Promise<Boolean> => {
-    const { errors } = await apollo.mutate({
+export const addShowInterest = async (groupId: number, type: GroupShowInterestType, showUri: string, date?: Date | null): Promise<GroupShow> => {
+    const { data, errors } = await apollo.mutate({
         mutation: addShowInterestMutation,
         variables: {
             groupId: groupId,
@@ -113,5 +114,5 @@ export const addShowInterest = async (groupId: number, type: GroupShowInterestTy
         throw new Error(errors[0].message);
     }
     
-    return true;
+    return data.addShowInterest;
 }

@@ -73,7 +73,7 @@ export const GroupInterestOverview = ({interest, members}: GroupInterestProps) =
     const booked = getBooked(interest);
 
     return (
-        <Flex>
+        <Flex onClick={() => { console.log("Testing") }}>
             <Stack direction='row'>
                 {
                     booked.length > 0 &&
