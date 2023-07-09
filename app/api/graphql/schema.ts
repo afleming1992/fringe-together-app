@@ -66,7 +66,7 @@ type Query {
 
 type Mutation {
     # User Mutations
-    createUser(uid: ID!, first_name: String!, last_name: String!): User
+    createUser(uid: ID!, firstName: String!, lastName: String!): User
 
     # Group Mutations
     createGroup(name: String!): Group

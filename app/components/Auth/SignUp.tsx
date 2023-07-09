@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import cn from 'classnames';
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, FieldProps, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { useAuth, VIEWS } from '../AuthProvider';
@@ -11,6 +11,7 @@ import { AuthResponse } from '@supabase/supabase-js';
 import { useMutation, useQuery } from '@apollo/client';
 import { createUser } from '@/lib/gql/user';
 import apolloClient from '@/lib/apollo/client';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Input, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 
 const SignUpSchema = Yup.object().shape({
   firstName: Yup.string().required('Required'),
@@ -24,20 +25,16 @@ const SignUp = () => {
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const [hideForm, setHideForm] = useState<boolean>(false);
 
     async function signUp(formData: any) {
         setSuccessMsg('');
         setErrorMsg('');
+        setSubmitting(true);
 
         const authResponse: AuthResponse = await supabase.auth.signUp({
             email: formData.email,
-            password: formData.password,
-            options: {
-                data: {
-                    first_name: formData.firstName,
-                    last_name: formData.lastName
-                }
-            }
+            password: formData.password
         });
 
         if (authResponse.error) {
@@ -50,25 +47,84 @@ const SignUp = () => {
                 mutation: createUser,
                 variables: {
                     uid: authResponse.data.user?.id,
-                    first_name: formData.firstName,
-                    last_name: formData.lastName
+                    firstName: formData.firstName,
+                    lastName: formData.lastName
                 }
             });
 
             if (errors) {
                 setErrorMsg(errors[0].message);
             } else {
+                setHideForm(true);
                 setSuccessMsg('Success! Please check your email for further instructions.');
             }
         } catch (e) {
-            console.error(e);
+            console.log(e);
+            setErrorMsg("We didn't quite manage to register you! Please contact support for more information")
         };
         
         
     }
 
     return (
-        <div className="flex items-center justify-center">
+        <Flex
+            minH="20vh"
+            align="center"
+            justify="center">
+            <Stack spacing={8} mx={"auto"} maxW={'lg'} py={12} px={6}>
+                <Stack align="center">
+                    <Heading size="lg" textAlign="center">Sign Up</Heading>
+                    <Text fontSize={'lg'} color={'pink.200'}>
+                        Create an Account to use FringeTogether
+                    </Text>
+                </Stack>
+            <Box 
+                rounded={'lg'}
+                bg={useColorModeValue('white', 'gray.700')}
+                boxShadow={'lg'}
+                p={8}>
+                {
+                    successMsg && 
+                    <Alert
+                        status='success'
+                        variant='subtle'
+                        flexDirection='column'
+                        alignItems='center'
+                        justifyContent='center'
+                        textAlign='center'
+                        height='200px'
+                        >
+                        <AlertIcon boxSize='40px' mr={0} />
+                        <AlertTitle mt={4} mb={1} fontSize='lg'>
+                            Check your email!
+                        </AlertTitle>
+                        <AlertDescription maxWidth='sm'>
+                            You&apos;ve registered! Please check your email to verify your account!
+                        </AlertDescription>
+                    </Alert>
+                }
+                {
+                    errorMsg && 
+                    <Alert
+                        status='success'
+                        variant='subtle'
+                        flexDirection='column'
+                        alignItems='center'
+                        justifyContent='center'
+                        textAlign='center'
+                        height='200px'
+                        >
+                        <AlertIcon boxSize='40px' mr={0} />
+                        <AlertTitle mt={4} mb={1} fontSize='lg'>
+                            Somethings not quite right...
+                        </AlertTitle>
+                        <AlertDescription maxWidth='sm'>
+                            { errorMsg }
+                        </AlertDescription>
+                    </Alert>
+                }
+            {
+                !hideForm &&
             <Formik
                 initialValues={{
                     firstName: '',
@@ -79,75 +135,79 @@ const SignUp = () => {
                 validationSchema={SignUpSchema}
                 onSubmit={signUp}
             >
-                {({ errors, touched }) => (
-                    <Form className={cn('w-full', 'max-w-sm')}>
-                        <h1 className="text-3xl font-bold text-center mb-4 dark:text-white">Sign Up</h1>
-                        {successMsg && <div className="text-green-600 w-full text-center">{successMsg}</div>}
+                {({ isValid, dirty }) => (
+                    <Form>
                         {errorMsg && <div className="text-red-600 w-full text-center">{errorMsg}</div>}
-                        <div className={cn(successMsg && 'hidden')}>
-                            <div className="mb-4">
-                                <label htmlFor="firstName" className="block text-sm font-bold mb-2">
-                                    First Name
-                                </label>
-                                <Field 
-                                    className={cn('input','w-full','text-black', errors.firstName && touched.firstName && 'bg-red-50')}
-                                    id="firstName"
-                                    name="firstName"
-                                    placeholder="Jane"
-                                    type="text" />
-                                {errors.firstName && touched.firstName ? (
-                                    <div className="text-red-600">{errors.firstName}</div>
-                                ) : null}
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="lastName" className="block text-sm font-bold mb-2">
-                                    Last Name
-                                </label>
-                                <Field 
-                                    className={cn('input','w-full','text-black', errors.lastName && touched.lastName && 'bg-red-50')}
-                                    id="lastName"
-                                    name="lastName"
-                                    placeholder="Doe"
-                                    type="text" />
-                                {errors.lastName && touched.lastName ? (
-                                    <div className="text-red-600">{errors.lastName}</div>
-                                ) : null}
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="email" className="block text-sm font-bold mb-2">
-                                    Email
-                                </label>
-                                <Field 
-                                    className={cn('input','w-full','text-black', errors.email && touched.email && 'bg-red-50')}
-                                    id="email"
-                                    name="email"
-                                    placeholder="jane@acme.com"
-                                    type="email" />
-                                {errors.email && touched.email ? (
-                                    <div className="text-red-600">{errors.email}</div>
-                                ) : null}
-                            </div>
-                            <div className="mb-6">
-                                <label className="block text-sm font-bold mb-2" htmlFor="password">Password</label>
-                                <Field
-                                    className={cn('input','w-full','text-black', errors.password && touched.password && 'bg-red-50')}
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    />
-                                {errors.password && touched.password ? (
-                                    <div className="text-red-600">{errors.password}</div>
-                                ) : null}
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <button type="submit" className="bg-pink-400 hover:bg-pink-500 text-white p-2 rounded mr-3">Sign Up</button>
-                                <button className="link" onClick={() => setView(VIEWS.SIGN_IN)}>Already have an account? Sign In</button>
-                            </div>
-                        </div>
+                        <Stack spacing={4}>
+                            <HStack>
+                                <Box>
+                                    <Field name="firstName">
+                                    {({ field, form }: any) => (
+                                        <FormControl isRequired isInvalid={form.errors.firstName && form.touched.firstName}>
+                                            <FormLabel>First Name</FormLabel>
+                                            <Input {...field} placeholder="Jane" />
+                                            <FormErrorMessage>{form.errors.firstName}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                    </Field>
+                                </Box>
+                                <Box>
+                                    <Field name="lastName">
+                                        {({ field, form }: any) => (
+                                            <FormControl isRequired isInvalid={form.errors.firstName && form.touched.firstName}>
+                                                <FormLabel>Last Name</FormLabel>
+                                                <Input {...field} placeholder="Doe" />
+                                                <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                </Box>
+                            </HStack>
+                            <Field name="email">
+                                {({ field, form }: any) => (
+                                    <FormControl isRequired isInvalid={form.errors.email}>
+                                        <FormLabel>Email</FormLabel>
+                                        <Input {...field} placeholder="jane.doe@email.com" />
+                                        <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
+                            <Field name="password">
+                                {({ field, form }: any) => (
+                                    <FormControl isRequired isInvalid={form.errors.email}>
+                                        <FormLabel>Password</FormLabel>
+                                        <Input type="password" {...field} />
+                                        <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
+                                    </FormControl>
+                                )}
+                            </Field>
+                        </Stack>
+                        <Stack spacing={10} pt={4}>
+                            <Button
+                                type="submit"
+                                isLoading={submitting}
+                                isDisabled={!dirty || !isValid} 
+                                loadingText="Registering..."
+                                size="lg"
+                                colorScheme="pink"
+                                _hover={{
+                                bg: 'blue.500',
+                                }}>
+                                Sign up
+                            </Button>
+                        </Stack>
+                        <Stack pt={6}>
+                            <Text align={'center'}>
+                                Already have an account? <Button variant="link" onClick={() => setView(VIEWS.SIGN_IN)}>Login</Button>
+                            </Text>
+                        </Stack>
                     </Form>
                 )}
-            </Formik>
-        </div>
+            </Formik>  
+            }        
+            </Box>  
+            </Stack>
+        </Flex>
     )
 }
 
