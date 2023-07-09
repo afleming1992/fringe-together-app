@@ -168,16 +168,16 @@ const SignUp = () => {
                                     <FormControl isRequired isInvalid={form.errors.email}>
                                         <FormLabel>Email</FormLabel>
                                         <Input {...field} placeholder="jane.doe@email.com" />
-                                        <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
+                                        <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
                             <Field name="password">
                                 {({ field, form }: any) => (
-                                    <FormControl isRequired isInvalid={form.errors.email}>
+                                    <FormControl isRequired isInvalid={form.errors.password}>
                                         <FormLabel>Password</FormLabel>
                                         <Input type="password" {...field} />
-                                        <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
+                                        <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>
@@ -189,10 +189,7 @@ const SignUp = () => {
                                 isDisabled={!dirty || !isValid} 
                                 loadingText="Registering..."
                                 size="lg"
-                                colorScheme="pink"
-                                _hover={{
-                                bg: 'blue.500',
-                                }}>
+                                colorScheme="pink">
                                 Sign up
                             </Button>
                         </Stack>

@@ -8,7 +8,7 @@ import supabase from '@/lib/supabase/browser';
 
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
-import { Button, Heading, Text } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 
 const SignInSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -17,9 +17,11 @@ const SignInSchema = Yup.object().shape({
 
 const SignIn = () => {
     const { setView } = useAuth();
+    const [ submitting, setSubmitting ] = useState<boolean>(false);
     const [ errorMsg, setErrorMsg ] = useState<string | null>(null);
 
     async function signIn(formData: any) {
+        setSubmitting(true);
         const { error } = await supabase.auth.signInWithPassword({
             email: formData.email,
             password: formData.password
@@ -27,60 +29,85 @@ const SignIn = () => {
 
         if(error) {
             setErrorMsg(error.message);
+        } else {
+            setView(null);
         }
-
-        setView(null);
+        setSubmitting(false);
     }
 
     return (
-        <div className="flex items-center justify-center">
-            <Formik
-                initialValues={{
-                    email: '',
-                    password: ''
-                }}
-                validationSchema={SignInSchema}
-                onSubmit={signIn}
-            >
-                {({ errors, touched }) => (
-                    <Form className="w-full max-w-sm">
-                        <Heading as={"h1"} mb="1">Sign In</Heading>
-                        <Text>Not currently a member? <Button variant='link' onClick={() => setView(VIEWS.SIGN_UP)}>Sign Up Here</Button></Text>
-                        {errorMsg && <div className="text-red-600 w-full text-center">{errorMsg}</div>}
-                        <div className="mt-4 mb-4">
-                            <label htmlFor="email" className="block text-sm font-bold mb-2">
-                                Email
-                            </label>
-                            <Field 
-                                className={cn('input','w-full','text-black', errors.email && touched.email && 'bg-red-50')}
-                                id="email"
-                                name="email"
-                                placeholder="jane@acme.com"
-                                type="email" />
-                            {errors.email && touched.email ? (
-                                <div className="text-red-600">{errors.email}</div>
-                            ) : null}
-                        </div>
-                        <div className="mb-6">
-                            <label className="block text-sm font-bold mb-2" htmlFor="password">Password</label>
-                            <Field
-                                className={cn('input','w-full','text-black', errors.password && touched.password && 'bg-red-50')}
-                                id="password"
-                                name="password"
-                                type="password"
-                                />
-                            {errors.password && touched.password ? (
-                                <div className="text-red-600">{errors.password}</div>
-                            ) : null}
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <button type="submit" className="bg-pink-400 hover:bg-pink-500 text-white p-2 rounded mr-3">Login</button>
-                            <button className="link" onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}>Forgot Password?</button>
-                        </div>
-                    </Form>
-                )}
-            </Formik>
-        </div>
+        <Flex
+            minH="20vh"
+            align="center"
+            justify="center">
+                <Stack spacing={8} mx="auto" maxW="xl" py={12} px={6}>
+                    <Stack align="center">
+                        <Heading size="lg" textAlign="center">
+                            Sign in to Fringe<Text as="span" color="pink.400">Together</Text>
+                        </Heading>
+                    </Stack>
+                    <Box
+                        rounded='lg'
+                        bg={useColorModeValue('white', 'gray.700')}
+                        boxShadow={'lg'}
+                        p={8}>
+                        {
+                            errorMsg && 
+                            <Alert status='error' variant='left-accent' mb={2}>
+                                <AlertIcon />
+                                {errorMsg}
+                            </Alert>
+                        }
+                        <Formik
+                            initialValues={{
+                                email: '',
+                                password: ''
+                            }}
+                            validationSchema={SignInSchema}
+                            onSubmit={signIn}
+                        >
+                            {({ isValid, dirty }) => (    
+                                <Form>
+                                    <Stack spacing={4}>
+                                        <Field name="email">
+                                            {({ field, form }: any) => (
+                                                <FormControl isRequired isInvalid={form.errors.email}>
+                                                    <FormLabel>Email</FormLabel>
+                                                    <Input {...field} placeholder="jane.doe@email.com" />
+                                                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                                                </FormControl>
+                                            )}
+                                        </Field>
+                                        <Field name="password">
+                                            {({ field, form }: any) => (
+                                                <FormControl isRequired isInvalid={form.errors.password}>
+                                                    <FormLabel>Password</FormLabel>
+                                                    <Input type="password" {...field} />
+                                                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                                                </FormControl>
+                                            )}
+                                        </Field>
+                                    </Stack>
+                                    <Stack spacing={10} pt={4}>
+                                        <Stack justifyContent={"right"}>
+                                            <Link>Forgot password?</Link>
+                                        </Stack>
+                                        <Button
+                                            type="submit"
+                                            isLoading={submitting}
+                                            isDisabled={!dirty || !isValid} 
+                                            loadingText="Signing In..."
+                                            size="lg"
+                                            colorScheme="pink">
+                                            Sign In
+                                        </Button>
+                                    </Stack>
+                                </Form>
+                            )}
+                        </Formik>
+                    </Box>
+                </Stack>
+        </Flex>
     );
 }
 
