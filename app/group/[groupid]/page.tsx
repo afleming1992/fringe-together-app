@@ -5,6 +5,7 @@ import { Button, Flex, Stack, Skeleton, Tab, TabList, TabPanels, Tabs, TabPanel 
 import { useGroup } from "../context/group";
 import { useAddShow } from "./components/AddShowProvider";
 import GroupShowsList from "./components/GroupShowsList";
+import { GroupMembersList } from "./components/GroupMembersList";
 
 const GroupHome = () => {
     const { group, refresh } = useGroup();
@@ -21,7 +22,7 @@ const GroupHome = () => {
         {
             group &&
             <Stack direction="column">
-                <Tabs isFitted variant="solid-rounded" colorScheme="pink" >
+                <Tabs isFitted variant="solid-rounded" colorScheme="pink" p={2} >
                     <TabList>
                         <Tab>Shows ({group.shows.length})</Tab>
                         <Tab>Members ({group.members.length})</Tab>
@@ -34,7 +35,7 @@ const GroupHome = () => {
                             <GroupShowsList shows={group.shows} members={group.members} />
                         </TabPanel>
                         <TabPanel>
-                            <p>Members</p>
+                            <GroupMembersList members={group.members} />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
