@@ -34,7 +34,8 @@ export const GroupLock = () => {
             <Flex
                 rounded={"lg"}
                 bg={"gray.700"}
-                p={4}>
+                p={4}
+                >
                 <Switch flex={1} size="lg" isChecked={joinable} onChange={handleChange} />
                 <Text flex={2}>
                     {

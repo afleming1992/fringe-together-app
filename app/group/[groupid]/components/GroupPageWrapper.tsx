@@ -28,14 +28,14 @@ const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
             <>
             <AddShowProvider group={group}>
                 <Box bg="gray.900" mb="1">
-                    <Flex p={2}>
+                    <Flex p={2} direction={{ base: 'column', md: 'row' }}>
                         <Box flex={3}>       
                             <Heading p={4} as={'h2'}>{ group.name }</Heading>
                         </Box>
                         <Box flex={1} alignContent={"center"} justifyContent={"center"}>
                             {
                                 isGroupAdmin &&
-                                <GroupLock group={group} />
+                                <GroupLock />
                             }
                         </Box>
                     </Flex>
