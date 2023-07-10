@@ -8,6 +8,8 @@ import { data } from "autoprefixer";
 export interface Group {
     id: number
     name: string
+    joinable: boolean
+    joinCode: string | null
     members: GroupMembership[]
     shows: GroupShow[]
 }
@@ -42,6 +44,8 @@ export const getGroupByIdQuery = gql`
         group(id: $groupId) {
             id
             name
+            joinCode
+            joinable
             members {
                 admin
                 user {
@@ -74,14 +78,6 @@ export const getGroupsQuery = gql`
         groups {
             id
             name
-            members {
-                admin
-                user {
-                    firstName
-                    lastName
-                    profilePic
-                }
-            }
         }
     }
 `   
@@ -115,4 +111,32 @@ export const addShowInterest = async (groupId: number, type: GroupShowInterestTy
     }
     
     return data.addShowInterest;
+}
+
+export const updateGroupMutation = gql`
+    mutation updateGroupMutation($groupId: Int!, $name: String, $joinable: Boolean) {
+        updateGroup(groupId: $groupId, name: $name, joinable: $joinable) {
+            id,
+            name,
+            joinable,
+            joinCode
+        }
+    }
+`
+
+export const updateGroup = async (groupId: number, name?: string, joinable?: boolean) : Promise<Group> => {
+    const { data, errors } = await apollo.mutate({
+        mutation: updateGroupMutation,
+        variables: {
+            groupId,
+            name,
+            joinable
+        }
+    })
+
+    if(errors) {
+        throw new Error(errors[0].message);
+    }
+
+    return data.updateGroup
 }
