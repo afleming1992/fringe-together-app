@@ -6,6 +6,8 @@ import { useGroup } from "../context/group";
 import { useAddShow } from "./components/AddShowProvider";
 import GroupShowsList from "./components/GroupShowsList";
 import { GroupMembersList } from "./components/GroupMembersList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const GroupHome = () => {
     const { group, refresh } = useGroup();
@@ -30,7 +32,7 @@ const GroupHome = () => {
                     <TabPanels>
                         <TabPanel>
                             <Flex alignItems={"center"}>
-                                <Button width="full" variant="outline" onClick={() => { openModal() }} colorScheme="green">Add Show</Button>
+                                <Button my={2} width="full" variant="ghost" onClick={() => { openModal() }} colorScheme="green"><FontAwesomeIcon icon={faPlusCircle} />&nbsp;Add Show</Button>
                             </Flex>
                             <GroupShowsList shows={group.shows} members={group.members} />
                         </TabPanel>
