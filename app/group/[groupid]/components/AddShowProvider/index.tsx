@@ -14,10 +14,10 @@ interface AddShowProviderProps {
 
 export interface AddShowContextData {
     openModal: any,
-    confirmInterested: any
+    updateInterest: any
 }
 
-export const AddShowContext = createContext<AddShowContextData>({openModal: () => {}, confirmInterested: () => {}}) 
+export const AddShowContext = createContext<AddShowContextData>({openModal: () => {}, updateInterest: () => {}}) 
 
 export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => {
     const toast = useToast();
@@ -31,7 +31,7 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
     },[setShow, onClose]);
 
     const value = useMemo(() => {
-        const confirmedInterested = async (showUri: string, date?: Date | null) => {
+        const updateInterest = async (showUri: string, type: GroupShowInterestType | null, date?: Date | null) => {
             if(group) {
                 const result = await addShowInterest(group.id, GroupShowInterestType.INTERESTED, showUri, date);
     

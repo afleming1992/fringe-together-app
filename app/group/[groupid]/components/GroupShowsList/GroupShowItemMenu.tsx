@@ -14,26 +14,13 @@ interface GroupShowItemMenuProps {
 }
 
 const GroupShowItemMenu = ({groupShow, currentUser} : GroupShowItemMenuProps) => {
-    const toast = useToast();
-    const { confirmInterested } = useAddShow();
     
-
-    const onInterestedClick = () => {
-        toast({
-            title: 'Registering interest...',
-            position: 'top',
-            status: 'info',
-            duration: 5000
-        })
-        confirmInterested(groupShow.show.uri);
-    }
 
     let iconBox = useColorModeValue("gray.100", "whiteAlpha.200");
     let iconColor = useColorModeValue("brand.200", "white");
 
-    const interest = groupShow.interest.find((entry) => {
-        return entry.user.uid === currentUser.uid
-    });
+    
+
 
     return (
         <Menu>

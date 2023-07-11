@@ -54,15 +54,16 @@ model GroupShow {
 }
 
 model GroupShowInterest {
-  id                Int                     @id @default(autoincrement())
-  groupShowId       Int             
+  groupShowId       Int
+  userUid           String          
   groupShow         GroupShow               @relation(fields: [groupShowId], references: [id])
+  user              User                    @relation(fields: [userUid], references: [uid], onDelete: Cascade)
   type              GroupShowInterestType
   date              DateTime?                
-  user              User                    @relation(fields: [userUid], references: [uid], onDelete: Cascade)
-  userUid           String
   createdAt         DateTime                @default(now())
   updatedAt         DateTime                @updatedAt
+
+  @@id([groupShowId, userUid])
 }
 
 enum GroupShowInterestType {

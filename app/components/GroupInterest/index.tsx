@@ -1,9 +1,10 @@
 import { GroupShow, GroupShowInterest, GroupShowInterestType } from "@/lib/gql/types"
-import { AvatarBadge, AvatarGroup, Badge, Box, Flex, Stack, useId } from "@chakra-ui/react";
+import { AvatarBadge, AvatarGroup, Badge, Box, Button, ButtonGroup, Flex, Stack, useId } from "@chakra-ui/react";
 import UserAvatar from "../UserAvatar";
 import { User } from "@/lib/gql/user";
 import { GroupMembership } from "@/lib/gql/group";
-import { faHeart, faTicket, faTicketAlt } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faHeart, faTicketSimple, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartUnfilled, faCheckCircle as faCheckCircleUnfilled } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export enum GroupInterestVariant {
@@ -74,7 +75,13 @@ export const GroupInterestOverview = ({interest, members}: GroupInterestProps) =
 
     return (
         <Flex onClick={() => { console.log("Testing") }}>
-            <Stack direction='row'>
+            
+            <ButtonGroup variant="outline" size="sm">
+                <Button leftIcon={<FontAwesomeIcon icon={faHeartUnfilled} />} colorScheme="pink">&nbsp;{interested.length} Interested</Button>
+                <Button leftIcon={<FontAwesomeIcon icon={faCheckCircleUnfilled} />} colorScheme="green">&nbsp;{booked.length} Booked</Button>
+            </ButtonGroup>
+
+            {/* <Stack direction='row'>
                 {
                     booked.length > 0 &&
                     <Badge variant="solid" colorScheme="green">
@@ -87,7 +94,7 @@ export const GroupInterestOverview = ({interest, members}: GroupInterestProps) =
                         <FontAwesomeIcon icon={faHeart} /> {interested.length} Interested
                     </Badge>
                 }
-            </Stack>
+            </Stack> */}
         </Flex>
     )
 }
