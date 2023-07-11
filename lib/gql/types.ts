@@ -34,6 +34,7 @@ export interface UserUid {
 }
 
 export enum GroupShowInterestType {
+    NOT_INTERESTED="NOT_INTERESTED",
     INTERESTED="INTERESTED",
     INTERESTED_IN_DATE="INTERESTED_IN_DATE",
     BOOKED="BOOKED",

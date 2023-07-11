@@ -16,7 +16,7 @@ type Group {
 }
 
 type GroupShow {
-    id: Int!
+    id: Int
     show: ShowInfo
     interest: [GroupShowInterest]
 }
@@ -52,6 +52,7 @@ type ShowInfo {
 }
 
 enum GroupShowInterestType {
+    NOT_INTERESTED
     INTERESTED
     INTERESTED_IN_DATE
     BOOKED
@@ -70,7 +71,7 @@ type Mutation {
 
     # Group Mutations
     createGroup(name: String!): Group
-    addShowInterest(groupId: Int!, showUri: String!, type: GroupShowInterestType!, date: String): GroupShow
+    updateShowInterest(groupId: Int!, showUri: String!, type: GroupShowInterestType!, date: String): GroupShow
 }
 `
 
