@@ -71,7 +71,7 @@ const GroupShowItem = ({show, members}: GroupShowItemProps) => {
         mb={2}>
         <Box p='20px'>
           <Flex w='100%' mb='10px'>
-            <Text fontWeight='600' color={mainText} w='100%' fontSize='2xl'>
+            <Text fontWeight='600' color={mainText} w='100%' fontSize='xl'>
                 { show.show.title }
             </Text>
             {
