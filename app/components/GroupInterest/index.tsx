@@ -1,5 +1,5 @@
 import { GroupShow, GroupShowInterest, GroupShowInterestType } from "@/lib/gql/types"
-import { AvatarBadge, AvatarGroup, Badge, Box, Button, ButtonGroup, Flex, Stack, useId } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, AvatarGroup, Badge, Box, Button, ButtonGroup, Flex, Stack, useId } from "@chakra-ui/react";
 import UserAvatar from "../UserAvatar";
 import { User } from "@/lib/gql/user";
 import { GroupMembership } from "@/lib/gql/group";
@@ -41,6 +41,14 @@ const getBooked = (interest: GroupShowInterest[]): GroupShowInterest[] => {
     return booked;
 }
 
+const getMembersMap = (members: GroupMembership[]): Map<string, User> => {
+    let map = new Map<string, User>();
+    members.map((member) => {
+        map.set(member.user.uid, member.user);
+    })
+    return map;
+}
+
 // const getUser = (uid: String, members: GroupMembership[]): GroupMembership | undefined => {
 //     const member: GroupMembership | undefined = members.find((member) => {
 //         return member.user.uid === uid
@@ -58,7 +66,8 @@ interface ButtonState {
     icon: IconDefinition
 }
 
-export const GroupInterestOverview = ({interest, currentInterestType, onInterestedClick, onGoingClick}: GroupInterestProps) => {
+export const GroupInterestOverview = ({interest, currentInterestType, members, onInterestedClick, onGoingClick}: GroupInterestProps) => {
+    const membersMap = getMembersMap(members);
     const interested = getInterested(interest, true);
     const booked = getBooked(interest);
 
@@ -84,25 +93,36 @@ export const GroupInterestOverview = ({interest, currentInterestType, onInterest
 
     return (
         <Flex onClick={() => { console.log("Testing") }}>
-            <ButtonGroup size="sm">
-                <Button onClick={onInterestedClick} variant={interestedButton.variant} leftIcon={<FontAwesomeIcon icon={interestedButton.icon} />} colorScheme="pink">&nbsp;{interested.length} Interested</Button>
-                <Button onClick={onGoingClick} variant={goingButton.variant} leftIcon={<FontAwesomeIcon icon={goingButton.icon} />} colorScheme="green">&nbsp;{booked.length} Booked</Button>
-            </ButtonGroup>
+            <Stack direction="row">
+                <Box p={1} alignContent={"center"}>
+                    <Button mr={2} size="sm" onClick={onInterestedClick} variant={interestedButton.variant} leftIcon={<FontAwesomeIcon icon={interestedButton.icon} />} colorScheme="pink">&nbsp;{interested.length} Interested</Button>
+                    <AvatarGroup size="sm" mt={2} max={4}>
+                        {
+                            interested.map((item) => {
+                                const memberUser = membersMap.get(item.user.uid);
 
-            {/* <Stack direction='row'>
-                {
-                    booked.length > 0 &&
-                    <Badge variant="solid" colorScheme="green">
-                        <FontAwesomeIcon icon={faTicketAlt} /> {interested.length} Booked
-                    </Badge>
-                }
-                {
-                    interested.length > 0 &&
-                    <Badge variant="solid" colorScheme="blue">
-                        <FontAwesomeIcon icon={faHeart} /> {interested.length} Interested
-                    </Badge>
-                }
-            </Stack> */}
+                                return (
+                                    <Avatar key={item.user.uid} name={memberUser ? `${memberUser.firstName} ${memberUser.lastName}` : ''} src={memberUser?.profilePic ? memberUser.profilePic : undefined} />
+                                )
+                            })
+                        }
+                    </AvatarGroup>
+                </Box>
+                <Box p={1} alignContent={"center"}>
+                    <Button size="sm" onClick={onGoingClick} variant={goingButton.variant} leftIcon={<FontAwesomeIcon icon={goingButton.icon} />} colorScheme="green">&nbsp;{booked.length} Going</Button>
+                    <AvatarGroup size="sm" mt={2} max={4}>
+                        {
+                            booked.map((item) => {
+                                const memberUser = membersMap.get(item.user.uid);
+
+                                return (
+                                    <Avatar key={item.user.uid} name={memberUser ? `${memberUser.firstName} ${memberUser.lastName}` : ''} src={memberUser?.profilePic ? memberUser.profilePic : undefined} />
+                                )
+                            })
+                        }
+                    </AvatarGroup>
+                </Box>
+            </Stack>
         </Flex>
     )
 }
