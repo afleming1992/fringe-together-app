@@ -1,5 +1,5 @@
 
-import { Show } from "@/lib/gql/types";
+import { GroupShowInterestType, Show } from "@/lib/gql/types";
 import { Link, Box, Button, ButtonGroup, Divider, FormControl, FormLabel, Select, Text } from '@chakra-ui/react';
 import ShowPreviewCard from "./ShowPreviewCard";
 import { InfoIcon } from "@chakra-ui/icons";
@@ -9,8 +9,7 @@ import { Field, FieldProps, Form, Formik } from "formik";
 
 interface GetShowConfirmationProps {
     show: Show,
-    confirmInterested: (showUri: string, date?: Date) => void,
-    confirmBooked: (date: Date) => void,
+    updateInterest: (showUri: string, type: GroupShowInterestType, date?: Date) => void,
     confirmNo: () => void
 }
 
@@ -18,21 +17,28 @@ const AlreadyBookedSchema = Yup.object().shape({
     date: Yup.string().required("A Date is required")
 })
 
-const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}: GetShowConfirmationProps) => {
+const GetShowConfirmation = ({show, updateInterest, confirmNo}: GetShowConfirmationProps) => {
     const [ confirmed , setConfirmed ] = useState<boolean>(false);
-    const [ alreadyBooked, setAlreadyBooked ] = useState<boolean>(false);
+    const [ going, setGoing ] = useState<boolean>(false);
     const [ interestedSubmitting, setInterestedSubmitting ] = useState<boolean>(false);
-    const [ alreadyBookedSubmitting, setAlreadyBookedSubmitting ] = useState<boolean>(false);
+    const [ goingSubmitting, setGoingSubmitting ] = useState<boolean>(false);
+    // const [ alreadyBookedSubmitting, setAlreadyBookedSubmitting ] = useState<boolean>(false);
     
-    const onInterestedClick = (formData: any) => {
+    const onInterestedClicked = (formData: any) => {
         setInterestedSubmitting(true);
-        confirmInterested(show.uri);
+        updateInterest(show.uri, GroupShowInterestType.INTERESTED);
     }
 
-    const onAlreadyBookedSubmit = (formData: any) => {
-        setAlreadyBookedSubmitting(true);
-        confirmBooked(new Date(formData.date))
+    const onGoingClicked = (formData: any) => {
+        setGoingSubmitting(true);
+        updateInterest(show.uri, GroupShowInterestType.BOOKED);
     }
+
+    // const onAlreadyBookedSubmit = (formData: any) => {
+    //     setAlreadyBookedSubmitting(true);
+    //     // Need to add date back in here once we want to look into that
+    //     updateShowInterest(show.uri, GroupShowInterestType.BOOKED);
+    // }
 
     return (
         <>
@@ -51,17 +57,17 @@ const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}
                 </Box>
             }
             {
-                confirmed && !alreadyBooked &&
+                confirmed && !going &&
                 <Box mb={2} textAlign={"center"}>
                     <Text fontWeight={"bold"} mb={2}>Are you interested in this show or have you booked tickets already?</Text>
-                    <Button isLoading={interestedSubmitting} loadingText="Submitting" onClick={onInterestedClick} my={2} colorScheme="blue" size="lg" width="full">I&apos;m interested</Button>
-                    {/*
-                        <Button isDisabled={interestedSubmitting} onClick={() => {setAlreadyBooked(true)}} my={2} colorScheme="green" size="lg" width="full">I&apos;ve already booked tickets!</Button>
-                    */}
+                    <Button isDisabled={goingSubmitting} isLoading={interestedSubmitting} loadingText="Submitting" onClick={onInterestedClicked} my={2} colorScheme="blue" size="lg" width="full">I&apos;m interested</Button>
+                    <Button isDisabled={interestedSubmitting} isLoading={goingSubmitting} loadingText="Submitting" onClick={onGoingClicked} my={2} colorScheme="green" size="lg" width="full">I&apos;m going!</Button>
                 </Box>
             }
-            {
-                confirmed && alreadyBooked &&
+            {/* 
+                Will add this again once Date Form is needed
+                {
+                confirmed && going &&
                 <Box mb={2} textAlign={"center"}>
                     <Formik
                         initialValues={{date: ""}}
@@ -94,7 +100,7 @@ const GetShowConfirmation = ({show, confirmInterested, confirmBooked, confirmNo}
                         )}
                     </Formik>
                 </Box>
-            }
+            } */}
         </>
     )
 }

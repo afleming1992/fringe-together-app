@@ -3,9 +3,10 @@ import { AvatarBadge, AvatarGroup, Badge, Box, Button, ButtonGroup, Flex, Stack,
 import UserAvatar from "../UserAvatar";
 import { User } from "@/lib/gql/user";
 import { GroupMembership } from "@/lib/gql/group";
-import { faCheck, faHeart, faTicketSimple, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faHeart, faTicketSimple, faCheckCircle, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartUnfilled, faCheckCircle as faCheckCircleUnfilled } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ReactNode } from "react";
 
 export enum GroupInterestVariant {
     OVERVIEW="overview"
@@ -14,7 +15,10 @@ export enum GroupInterestVariant {
 interface GroupInterestProps {
     variant?: GroupInterestVariant,
     members: GroupMembership[],
-    interest: GroupShowInterest[]
+    interest: GroupShowInterest[],
+    currentInterestType: GroupShowInterestType,
+    onInterestedClick: () => void,
+    onGoingClick: () => void
 }
 
 const getInterested = (interest: GroupShowInterest[], includeInterestedInDate: boolean = false) => {
@@ -37,48 +41,52 @@ const getBooked = (interest: GroupShowInterest[]): GroupShowInterest[] => {
     return booked;
 }
 
-const buildAvatarGroup = (interested: GroupShowInterest[], members: GroupMembership[]) => {
-    return (
-        <AvatarGroup spacing={"0.5"} size='sm' max={4}>
-            {
-                interested.map((item) => {
-                    const member: GroupMembership | undefined = members.find((member) => {
-                        return member.user.uid == item.user.uid
-                    });
-                    
-                    if(!member) return <>Hello</>
-
-                    return (
-                        <UserAvatar key={item.user.uid} user={member.user} />
-                    )
-                })
-            }
-        </AvatarGroup>
-    )
-}
-
-const getUser = (uid: String, members: GroupMembership[]): GroupMembership | undefined => {
-    const member: GroupMembership | undefined = members.find((member) => {
-        return member.user.uid === uid
-    });
+// const getUser = (uid: String, members: GroupMembership[]): GroupMembership | undefined => {
+//     const member: GroupMembership | undefined = members.find((member) => {
+//         return member.user.uid === uid
+//     });
     
-    return member;
-}
+//     return member;
+// }
 
 export const GroupInterest = ({variant = GroupInterestVariant.OVERVIEW, ...props}: GroupInterestProps) => {
     return <GroupInterestOverview {...props} />
 }
 
-export const GroupInterestOverview = ({interest, members}: GroupInterestProps) => {
+interface ButtonState {
+    variant: string,
+    icon: IconDefinition
+}
+
+export const GroupInterestOverview = ({interest, currentInterestType, onInterestedClick, onGoingClick}: GroupInterestProps) => {
     const interested = getInterested(interest, true);
     const booked = getBooked(interest);
 
+    let interestedButton: ButtonState = {
+        variant: "outline",
+        icon: faHeartUnfilled
+    }
+    let goingButton: ButtonState = {
+        variant: "outline",
+        icon: faCheckCircleUnfilled
+    }
+    if(currentInterestType === GroupShowInterestType.INTERESTED) {
+        interestedButton = {
+            variant: "solid",
+            icon: faHeart
+        }
+    } else if(currentInterestType === GroupShowInterestType.BOOKED) {
+        goingButton = {
+            variant: "solid",
+            icon: faCheckCircle
+        }
+    }
+
     return (
         <Flex onClick={() => { console.log("Testing") }}>
-            
-            <ButtonGroup variant="outline" size="sm">
-                <Button leftIcon={<FontAwesomeIcon icon={faHeartUnfilled} />} colorScheme="pink">&nbsp;{interested.length} Interested</Button>
-                <Button leftIcon={<FontAwesomeIcon icon={faCheckCircleUnfilled} />} colorScheme="green">&nbsp;{booked.length} Booked</Button>
+            <ButtonGroup size="sm">
+                <Button onClick={onInterestedClick} variant={interestedButton.variant} leftIcon={<FontAwesomeIcon icon={interestedButton.icon} />} colorScheme="pink">&nbsp;{interested.length} Interested</Button>
+                <Button onClick={onGoingClick} variant={goingButton.variant} leftIcon={<FontAwesomeIcon icon={goingButton.icon} />} colorScheme="green">&nbsp;{booked.length} Booked</Button>
             </ButtonGroup>
 
             {/* <Stack direction='row'>

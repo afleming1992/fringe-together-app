@@ -1,10 +1,9 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader,  ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import GetShowForm from "./GetShowForm";
-import { Show } from "@/lib/gql/types";
+import { GroupShowInterestType, Show } from "@/lib/gql/types";
 import GetShowConfirmation from "./GetShowConfirmation";
-import { Group, addShowInterest } from "@/lib/gql/group";
-import { GroupShowInterestType } from "@prisma/client";
+import { Group, updateShowInterest } from "@/lib/gql/group";
 import { useGroup } from "@/app/group/context/group";
 
 interface AddShowProviderProps {
@@ -31,18 +30,18 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
     },[setShow, onClose]);
 
     const value = useMemo(() => {
-        const updateInterest = async (showUri: string, type: GroupShowInterestType | null, date?: Date | null) => {
+        const updateInterest = async (showUri: string, type: GroupShowInterestType, date?: Date | null) => {
             if(group) {
-                const result = await addShowInterest(group.id, GroupShowInterestType.INTERESTED, showUri, date);
+                const result = await updateShowInterest(group.id, type, showUri, date);
     
                 if(result) {
-                    onModalClose();
                     toast({
                         status: 'success',
+                        title: 'Your show has been updated',
                         position: 'top',
-                        title: 'Show Interest added!',
-                        description: `Your interest for ${result.show.title} has been registered!`
+                        duration: 3000,
                     })
+                    onModalClose();
                     refresh();
                 }
             }
@@ -50,19 +49,9 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
 
         return {
             openModal: () => onOpen(),
-            confirmInterested: (showUri: string, date?: Date) => { confirmedInterested(showUri, date) }
+            updateInterest: (showUri: string, type: GroupShowInterestType, date?: Date) => { updateInterest(showUri, type, date) }
         }
     }, [onOpen, group, refresh, onModalClose, toast]);
-
-    
-
-    const confirmedBooked = (date: Date) => {
-            
-    }
-
-    const confirmedNo = () => {
-        setShow(null)
-    }
 
     return (
         <AddShowContext.Provider value={value} {...props}>
@@ -78,7 +67,7 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
                         }
                         {
                             show &&
-                            <GetShowConfirmation show={show} confirmBooked={confirmedBooked} confirmInterested={value.confirmInterested} confirmNo={confirmedNo} />
+                            <GetShowConfirmation show={show} updateInterest={value.updateInterest} confirmNo={() => {onModalClose()}} />
                         }
                     </ModalBody>
                 </ModalContent>

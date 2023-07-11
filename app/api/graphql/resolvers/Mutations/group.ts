@@ -133,7 +133,8 @@ const mutators = {
             if(groupShow === null) {
                 throw new Error("Can't be not interested in a non-existant show")
             } else {
-                return await deleteInterestForShow(ctx.prisma, groupShow.id, ctx.currentUser.id)
+                await deleteInterestForShow(ctx.prisma, groupShow.id, ctx.currentUser.id)
+                return groupShow;
             }
         } 
 

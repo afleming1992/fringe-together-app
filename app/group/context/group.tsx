@@ -20,8 +20,6 @@ export const GroupProvider = ({groupId, ...props} : GroupProviderProps) => {
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
 
     useEffect(() => {
-        console.log("Group");
-        setGroup(null);
         const getData = async () => {
             if(groupId) { 
                 const data: Group = await getGroupById(groupId);
@@ -30,7 +28,6 @@ export const GroupProvider = ({groupId, ...props} : GroupProviderProps) => {
             }
             setIsRefreshing(false);
         };
-
         getData();
     },[groupId, isRefreshing])
 

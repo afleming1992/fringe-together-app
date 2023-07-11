@@ -1,9 +1,7 @@
 import { gql } from "@apollo/client";
 import apollo from '@/lib/apollo/client';
 import { User } from "./user";
-import { GroupShowInterest, GroupShowInterestType } from "@prisma/client";
-import { GroupShow } from "./types";
-import { data } from "autoprefixer";
+import { GroupShow, GroupShowInterestType } from "./types";
 
 export interface Group {
     id: number
@@ -87,7 +85,7 @@ export const getGroupsQuery = gql`
 `   
 
 export const addShowInterestMutation = gql`
-    mutation addShowInterest($groupId: Int!, $showUri: String!, $type: GroupShowInterestType!) {
+    mutation updateShowInterest($groupId: Int!, $showUri: String!, $type: InterestType!) {
         addShowInterest(groupId: $groupId, showUri: $showUri, type: $type) {
             id,
             show {
@@ -99,20 +97,33 @@ export const addShowInterestMutation = gql`
     }
 `
 
-export const addShowInterest = async (groupId: number, type: GroupShowInterestType, showUri: string, date?: Date | null): Promise<GroupShow> => {
+export const updateShowInterestMutation = gql`
+    mutation updateShowInterest($groupId: Int!, $showUri: String!, $type: GroupShowInterestType!, $date: String) {
+        updateShowInterest(groupId: $groupId, showUri: $showUri, type: $type, date: $date) {
+            id,
+            show {
+                uri,
+                title,
+                location
+            }
+        }
+    }
+`
+
+export const updateShowInterest = async(groupId: number, type: GroupShowInterestType, showUri: string, date?: Date | null): Promise<GroupShow> => {
     const { data, errors } = await apollo.mutate({
-        mutation: addShowInterestMutation,
+        mutation: updateShowInterestMutation,
         variables: {
             groupId: groupId,
             type,
             showUri,
             date,
         }
-    });
+    })
 
     if(errors) {
         throw new Error(errors[0].message);
     }
-    
-    return data.addShowInterest;
+
+    return data.updateShowInterest;
 }
