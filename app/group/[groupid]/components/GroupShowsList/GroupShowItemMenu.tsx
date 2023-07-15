@@ -1,6 +1,6 @@
 import { getShowTicketLink } from "@/app/components/ShowTicketLink";
 import { GroupShow } from "@/lib/gql/types";
-import { Button, Icon, Link, Menu, MenuButton, MenuGroup, MenuItem, MenuList, useColorModeValue, useToast } from "@chakra-ui/react";
+import { Button, Icon, IconButton, Link, Menu, MenuButton, MenuGroup, MenuItem, MenuList, useColorModeValue, useToast } from "@chakra-ui/react";
 import { faEllipsis, faExternalLinkSquare, faHeart, faHeartBroken, faTicketSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { User } from "@prisma/client";
@@ -16,10 +16,8 @@ const GroupShowItemMenu = ({groupShow, currentUser} : GroupShowItemMenuProps) =>
 
     return (
         <Menu>
-            <MenuButton as={Button} bg={iconBox}>
+            <MenuButton size="sm" as={IconButton} bg={iconBox}>
                 <Icon
-                    w='24px'
-                    h='24px'
                     color={iconColor}
                     >
                         <FontAwesomeIcon icon={faEllipsis} />
