@@ -1,10 +1,6 @@
 import { Group, GroupShowInterestType, PrismaClient, User } from '@prisma/client';
 import { GraphQLContext } from '../../context';
-import { Context } from '../../utils';
-import { createTextChangeRange } from 'typescript';
-import { group } from 'console';
 import { getShow } from '@/lib/gql/show_remote';
-import { GroupShow, ShowInfo } from '@/lib/gql/types';
 import generateJoinCode from '../../util/joinCodeGenerator';
 
 interface CreateGroupArgs {
@@ -15,10 +11,10 @@ interface JoinGroupProps {
     joinCode: string
 }
 
-export interface AddShowProps {
-    type: GroupShowInterestType,
+export interface UpdateShowInterestProps {
     groupId: number,
     showUri: string,
+    type: InterestType,
     date?: Date
 }
 
@@ -28,7 +24,8 @@ export interface UpdateGroupProps {
     joinable?: boolean | undefined
 }
 
-export enum AddShowType {
+export enum InterestType {
+    NOT_INTERESTED = "NOT_INTERESTED",
     INTERESTED = "INTERESTED",
     INTERESTED_IN_DATE = "INTERESTED_IN_DATE",
     BOOKED = "BOOKED"
@@ -40,6 +37,15 @@ const addUserToGroup = (prisma: PrismaClient, groupId: number, user: User, isAdm
             groupId,
             userUid: user.uid,
             admin: isAdmin
+        }
+    })
+}
+
+const deleteInterestForShow = async (prisma: PrismaClient, groupShowId: number, userUid: string) => {
+    return await prisma.groupShowInterest.deleteMany({
+        where: {
+            groupShowId,
+            userUid
         }
     })
 }
@@ -96,14 +102,10 @@ const mutators = {
 
         return group;
     },
-    async addShowInterest(parent: any, {groupId, showUri, type, date}: AddShowProps, ctx: GraphQLContext) {
+    async updateShowInterest(parent: any, {groupId, showUri, type, date}: UpdateShowInterestProps, ctx: GraphQLContext) {
         if (!ctx.currentUser) {
             throw new Error("Unauthorised");
         }  
-
-        if (type != AddShowType.INTERESTED && date == null) {
-            throw new Error("Date is required if INTERESTED_IN_DATE or BOOKED")
-        }
 
         const show = await getShow(showUri);
         
@@ -132,8 +134,18 @@ const mutators = {
             }
         });
 
+        if(type == InterestType.NOT_INTERESTED) {
+            if(groupShow === null) {
+                throw new Error("Can't be not interested in a non-existant show")
+            } else {
+                await deleteInterestForShow(ctx.prisma, groupShow.id, ctx.currentUser.id)
+                return groupShow;
+            }
+        } 
+
+        const dbType = GroupShowInterestType[type]
         const interestData = {
-            type,
+            type: dbType,
             date: date?.toISOString(),
             userUid: ctx.currentUser.id
         }
@@ -160,9 +172,23 @@ const mutators = {
                 },
                 data: {
                     interest: {
-                        create: [
-                            interestData
-                        ]
+                        upsert: {
+                            where: {
+                                groupShowId_userUid: {
+                                    groupShowId: groupShow.id,
+                                    userUid: ctx.currentUser.id
+                                } 
+                            },
+                            update: {
+                                type: dbType,
+                                date: interestData.date
+                            },
+                            create: {
+                                type: dbType,
+                                userUid: ctx.currentUser.id,
+                                date: interestData.date
+                            }
+                        }
                     }
                 },
                 include: {
