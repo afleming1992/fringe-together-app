@@ -1,6 +1,6 @@
 import { useGroup } from "@/app/group/context/group";
 import { Group, updateGroup } from "@/lib/gql/group";
-import { Badge, Box, Flex, Spinner, Switch, Text } from "@chakra-ui/react";
+import { Badge, Box, Card, Center, Flex, Heading, Spinner, Switch, Text } from "@chakra-ui/react";
 import { faLock, faUnlock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -30,34 +30,40 @@ export const GroupLock = () => {
     }
 
     return (
-        <>
-            <Flex
-                rounded={"lg"}
+        <Center>
+            <Flex 
                 bg={"gray.700"}
-                p={4}
-                >
-                <Switch flex={1} size="lg" isChecked={joinable} onChange={handleChange} />
-                <Text flex={2}>
-                    {
-                        !joinable &&
-                        <Badge colorScheme="red" fontSize={"1em"}>
-                            <FontAwesomeIcon icon={faLock} /> Private
-                        </Badge>
-                    }
-                    {
-                        joinable && joinCode == null &&
-                        <Badge colorScheme="blue" fontSize={"1em"}>
-                            <Spinner size="xs" /> Generating Code...
-                        </Badge>
-                    }
-                    {
-                        joinable && joinCode &&
-                        <Badge colorScheme="green" fontSize={"1em"}>
-                            <FontAwesomeIcon icon={faUnlock} /> Join Code: { joinCode }
-                        </Badge>
-                    }
-                </Text>
+                direction={"column"}
+                minWidth={"xs"}
+                maxWidth={"sm"}
+                rounded={"lg"}
+                p={4}>
+                <Heading size="sm" mb={4}>Privacy</Heading>
+                <Flex>
+                    <Switch flex={1} size="lg" isChecked={joinable} onChange={handleChange} mr={4} />
+                    <Text flex={2}>
+                        {
+                            !joinable &&
+                            <Badge colorScheme="red" fontSize={"1em"}>
+                                <FontAwesomeIcon icon={faLock} /> Private
+                            </Badge>
+                        }
+                        {
+                            joinable && joinCode == null &&
+                            <Badge colorScheme="blue" fontSize={"1em"}>
+                                <Spinner size="xs" /> Generating Code...
+                            </Badge>
+                        }
+                        {
+                            joinable && joinCode &&
+                            <Badge colorScheme="green" fontSize={"1em"}>
+                                <FontAwesomeIcon icon={faUnlock} /> Join Code: { joinCode }
+                            </Badge>
+                        }
+                    </Text>
+                </Flex>
             </Flex>
-        </>
+            
+        </Center>
     )
 }

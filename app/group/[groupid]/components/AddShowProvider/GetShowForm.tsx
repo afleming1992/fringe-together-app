@@ -50,7 +50,7 @@ const GetShowForm = ({setShow}: GetShowFormProps) => {
                                 <ListItem p={1}>Head to the <Link color='pink.300' href="https://tickets.edfringe.com/" isExternal>tickets.edfringe.com <ExternalLinkIcon mx='2px' /></Link> page of the show you wish to add..</ListItem>
                                 <ListItem p={1}>Copy the URL of the page. Is should look something like this: <Code>https://tickets.edfringe.com/whats-on/007-voices-of-bond</Code></ListItem>
                                 <ListItem p={1}>Paste it into the form below and hit submit!</ListItem>
-                            </OrderedList>
+                            </OrderedList> 
                         </Box>
                         <Divider />                
                         <Formik

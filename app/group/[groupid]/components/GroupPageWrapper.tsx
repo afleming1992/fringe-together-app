@@ -32,12 +32,6 @@ const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
                         <Box flex={3}>       
                             <Heading p={4} as={'h2'}>{ group.name }</Heading>
                         </Box>
-                        <Box flex={1} alignContent={"center"} justifyContent={"center"}>
-                            {
-                                isGroupAdmin &&
-                                <GroupLock />
-                            }
-                        </Box>
                     </Flex>
                     {children}
                 </Box>

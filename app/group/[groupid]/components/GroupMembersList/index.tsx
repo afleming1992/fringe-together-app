@@ -4,6 +4,7 @@ import { GroupMembership } from "@/lib/gql/group"
 import { SimpleGrid, Box, Heading, Text, Badge, Avatar, Flex, ButtonGroup, Button } from "@chakra-ui/react";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GroupLock } from "../GroupLock";
 
 interface GroupMembersListProps {
     members: GroupMembership[]
@@ -21,14 +22,23 @@ export const GroupMembersList = ({members}: GroupMembersListProps) => {
     })
     
     return (
-        <SimpleGrid columns={[1, null , 2]} spacing={5}>
+        <>
             {
-                admins.map((admin) => (<GroupMemberListItem key={admin.user.uid} member={admin} addAdminActions={isGroupAdmin} />))
+                isGroupAdmin &&
+                <Box mb={4}>
+                    <GroupLock />
+                </Box>
             }
-            {
-                nonAdmins.map((member) => (<GroupMemberListItem key={member.user.uid} member={member} addAdminActions={isGroupAdmin} />))
-            }
-        </SimpleGrid>
+            <SimpleGrid columns={[1, null , 2]} spacing={5}>
+                {
+                    admins.map((admin) => (<GroupMemberListItem key={admin.user.uid} member={admin} addAdminActions={isGroupAdmin} />))
+                }
+                {
+                    nonAdmins.map((member) => (<GroupMemberListItem key={member.user.uid} member={member} addAdminActions={isGroupAdmin} />))
+                }
+            </SimpleGrid>
+        </>
+        
     );
 }
 

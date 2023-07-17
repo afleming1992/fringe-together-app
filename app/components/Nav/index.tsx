@@ -17,9 +17,8 @@ const NavBar = () => {
     const { initial, session, profile, setView } = useAuth();
 
     return  (
-        <Container maxWidth={"6xl"} mb="5">
         <Box>
-            <Flex 
+            <Flex
                 bg={useColorModeValue('white', 'gray.800')}
                 color={useColorModeValue('gray.600', 'white')}
                 minH={"60px"}
@@ -104,7 +103,6 @@ const NavBar = () => {
                     <MobileNav />
                 </Collapse>
             </Box>
-        </Container>
     )
 }
 

@@ -41,9 +41,7 @@ const Providers = ({children, accessToken, cookies}: ProvidersProps) => {
                 <ColorModeScript initialColorMode={theme.config.initialColorMode} />
                 <ChakraProvider theme={theme}>
                     <AuthProvider accessToken={accessToken}>
-                        <Container maxWidth={"full"}>
-                            {children}
-                        </Container>
+                        {children}
                     </AuthProvider>
                 </ChakraProvider>
             </CacheProvider>
