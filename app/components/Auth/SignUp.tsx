@@ -34,7 +34,10 @@ const SignUp = () => {
 
         const authResponse: AuthResponse = await supabase.auth.signUp({
             email: formData.email,
-            password: formData.password
+            password: formData.password,
+            options: {
+                emailRedirectTo: `${location.origin}/auth/callback`
+            }
         });
 
         if (authResponse.error) {
