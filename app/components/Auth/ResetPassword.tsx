@@ -4,6 +4,7 @@ import supabase from "@/lib/supabase/browser";
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import cn from 'classnames';
+import { Box,Flex, Stack, Heading, Text, useColorModeValue, Alert, AlertDescription, AlertIcon, AlertTitle, FormControl, FormErrorMessage, FormLabel, Input, Button } from '@chakra-ui/react';
 
 const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required('Required')
@@ -11,62 +12,113 @@ const ResetPasswordSchema = Yup.object().shape({
 
 const ResetPassword = () => {
     const { setView } = useAuth();
-    const [ errorMsg, setErrorMsg ] = useState<string | null>(null);
-    const [ successMsg, setSuccessMsg ] = useState<string | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [successMsg, setSuccessMsg] = useState<string | null>(null);
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [hideForm, setHideForm] = useState<boolean>(false);
 
     async function resetPassword(formData: any) {
+        setSubmitting(true);
         console.log(formData);
         const { error } = await supabase.auth.resetPasswordForEmail(formData?.email, {
-            redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_BASE_URL}`
+            redirectTo: `${location.origin}/auth/callback?next=/account/update-password`
         });
 
         if (error) {
             setErrorMsg(error.message);
         } else {
-            setSuccessMsg('Password reset instructions sent.')
+            setHideForm(true);
+            setSuccessMsg(`If you hold an account with us, we have sent instructions to reset your password!`)
         }
+        setSubmitting(false);
     }
 
     return (
-        <div className="flex items-center justify-center">
+        <Flex
+            minH="20vh"
+            align="center"
+            justify="center">
+            <Stack spacing={8} mx={"auto"} maxW={'lg'} py={12} px={6}>
+                <Stack align="center">
+                    <Heading size="lg" textAlign="center">Forgot your password?</Heading>
+                    <Text fontSize={'lg'} color={'pink.200'}>
+                        You&apos;ll get an email with a reset link
+                    </Text>
+                </Stack>
+                <Box
+                    rounded={'lg'}
+                    bg={useColorModeValue('white', 'gray.700')}
+                    boxShadow={'lg'}
+                    minWidth={'sm'}
+                    p={8}>
+                    {
+                        errorMsg && 
+                        <Alert status='error' variant='left-accent' mb={2}>
+                            <AlertIcon />
+                            {errorMsg}
+                        </Alert>
+                    }
+                    {
+                        successMsg && 
+                        <Alert
+                            status='success'
+                            variant='subtle'
+                            flexDirection='column'
+                            alignItems='center'
+                            justifyContent='center'
+                            textAlign='center'
+                            height='200px'
+                            >
+                            <AlertIcon boxSize='40px' mr={0} />
+                            <AlertTitle mt={4} mb={1} fontSize='lg'>
+                                Check your email!
+                            </AlertTitle>
+                            <AlertDescription maxWidth='sm'>
+                                { successMsg }
+                            </AlertDescription>
+                        </Alert>
+                    }
+                    { !hideForm &&
+                        <Formik
+                            initialValues={{
+                                email: '',
+                            }}
+                            validationSchema={ResetPasswordSchema}
+                            onSubmit={resetPassword}
+                        >
+                            {({ isValid, dirty }) => (
+                                <Form>
+                                    <Stack spacing={4}>
+                                        <Field name="email">
+                                            {({ field, form }: any) => (
+                                                <FormControl isRequired isInvalid={form.errors.email}>
+                                                    <FormLabel>Email</FormLabel>
+                                                    <Input {...field} placeholder="jane.doe@email.com" />
+                                                    <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                                                </FormControl>
+                                            )}
+                                        </Field>
+                                    </Stack>
+                                    <Stack spacing={10} pt={4}>
+                                        <Button
+                                            type="submit"
+                                            isLoading={submitting}
+                                            isDisabled={!dirty || !isValid} 
+                                            loadingText="Requesting..."
+                                            size="lg"
+                                            colorScheme="pink">
+                                            Request Reset
+                                        </Button>
+                                    </Stack>
+                                </Form>
+                            )}
+                        </Formik>
+                     }
+                </Box>
+            </Stack>
             
-            <Formik
-                initialValues={{
-                    email: '',
-                }}
-                validationSchema={ResetPasswordSchema}
-                onSubmit={resetPassword}
-            >
-                {({ errors, touched }) => (
-                    <Form className='w-full max-w-sm'>
-                        <h2 className="text-3xl font-bold w-full text-center mb-4 dark:text-white">Forgot Password</h2>
-                        {errorMsg && <div className="text-red-600 text-center">{errorMsg}</div>}
-                        {successMsg && <div className="text-green-600 text-center">{successMsg}</div>}
-                        <div className="mb-4">
-                            <label htmlFor="email" className="block text-sm font-bold mb-2">Email</label>
-                            <Field
-                                className={cn('input','w-full','text-black', errors.email && 'bg-red-50')}
-                                id="email"
-                                name="email"
-                                placeholder="jane@acme.com"
-                                type="email"
-                                />
-                                {errors.email && touched.email ? (
-                                    <div className="text-red-600">{errors.email}</div>
-                                ) : null}
-                        </div>
-                        <div className="flex justify-items justify-between mb-4">
-                            <button type="submit" className="bg-pink-400 hover:bg-pink-500 text-white p-2 rounded mr-3">Submit</button>
-                            <button className="link w-full" type="button" onClick={() => setView(VIEWS.SIGN_UP)}>
-                                Don&apos;t have an account? Sign Up.
-                            </button>
-                        </div>
-                        
-                    </Form>
-                )}
-            </Formik>
             
-        </div>
+        </Flex>
     );
 }
 
