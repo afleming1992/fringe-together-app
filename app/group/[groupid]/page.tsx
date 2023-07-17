@@ -5,6 +5,9 @@ import { Button, Flex, Stack, Skeleton, Tab, TabList, TabPanels, Tabs, TabPanel 
 import { useGroup } from "../context/group";
 import { useAddShow } from "./components/AddShowProvider";
 import GroupShowsList from "./components/GroupShowsList";
+import { GroupMembersList } from "./components/GroupMembersList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const GroupHome = () => {
     const { group, refresh } = useGroup();
@@ -21,7 +24,7 @@ const GroupHome = () => {
         {
             group &&
             <Stack direction="column">
-                <Tabs isFitted variant="solid-rounded" colorScheme="pink" >
+                <Tabs isFitted variant="solid-rounded" colorScheme="pink" p={2} >
                     <TabList>
                         <Tab>Shows ({group.shows.length})</Tab>
                         <Tab>Members ({group.members.length})</Tab>
@@ -29,12 +32,12 @@ const GroupHome = () => {
                     <TabPanels>
                         <TabPanel>
                             <Flex alignItems={"center"}>
-                                <Button width="full" variant="outline" onClick={() => { openModal() }} colorScheme="green">Add Show</Button>
+                                <Button my={2} width="full" variant="ghost" onClick={() => { openModal() }} colorScheme="green"><FontAwesomeIcon icon={faPlusCircle} />&nbsp;Add Show</Button>
                             </Flex>
                             <GroupShowsList shows={group.shows} members={group.members} />
                         </TabPanel>
                         <TabPanel>
-                            <p>Members</p>
+                            <GroupMembersList members={group.members} />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

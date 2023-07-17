@@ -17,9 +17,8 @@ const NavBar = () => {
     const { initial, session, profile, setView } = useAuth();
 
     return  (
-        <Container maxWidth={"6xl"} mb="5">
         <Box>
-            <Flex 
+            <Flex
                 bg={useColorModeValue('white', 'gray.800')}
                 color={useColorModeValue('gray.600', 'white')}
                 minH={"60px"}
@@ -104,7 +103,6 @@ const NavBar = () => {
                     <MobileNav />
                 </Collapse>
             </Box>
-        </Container>
     )
 }
 
@@ -120,18 +118,7 @@ const DesktopNav = (props: DesktopNavProps) => {
     return (
         <Stack direction={'row'} align={"center"} spacing={4}>
             <Box>
-                <Link
-                    p={2}
-                    href={'#'}
-                    fontSize={'sm'}
-                    fontWeight={500}
-                    color={linkColor}
-                    _hover={{
-                    textDecoration: 'none',
-                    color: linkHoverColor,
-                    }}> 
-                    Text
-                </Link>
+                
             </Box>
         </Stack>
     )
@@ -141,6 +128,6 @@ const MobileNav = () => {
     return (
         <></>
     )
-}
+} 
 
 export default NavBar;

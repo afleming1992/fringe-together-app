@@ -1,15 +1,14 @@
 import { Group, GroupShowInterestType, PrismaClient, User } from '@prisma/client';
 import { GraphQLContext } from '../../context';
 import { getShow } from '@/lib/gql/show_remote';
+import generateJoinCode from '../../util/joinCodeGenerator';
 
 interface CreateGroupArgs {
     name: string
 }
 
-interface AddMemberToGroupArgs {
-    uid: string
-    groupId: number
-    isAdmin: boolean
+interface JoinGroupProps {
+    joinCode: string
 }
 
 export interface UpdateShowInterestProps {
@@ -17,6 +16,12 @@ export interface UpdateShowInterestProps {
     showUri: string,
     type: InterestType,
     date?: Date
+}
+
+export interface UpdateGroupProps {
+    groupId: number,
+    name?: string | undefined,
+    joinable?: boolean | undefined
 }
 
 export enum InterestType {
@@ -191,6 +196,84 @@ const mutators = {
                 }
             })
         }
+    },
+    async joinGroup(parent: any, {joinCode}: JoinGroupProps, ctx: GraphQLContext) {
+        if (!ctx.currentUser) {
+            throw new Error("Unauthorised");
+        }  
+
+        const group = await ctx.prisma.group.findFirst({
+            where: {
+                joinCode
+            }
+        })
+
+        if(!group) throw new Error("No Group Found");
+
+        const groupMembership = await ctx.prisma.groupMembership.create({
+            data: {
+                groupId: group.id,
+                userUid: ctx.currentUser.id,
+                admin: false
+            },
+            include: {
+                group: true
+            }
+        });
+
+        if(!groupMembership) throw new Error("Failed to Add to Group");
+
+        return group;
+    },
+    async updateGroup(parent: any, {groupId, name, joinable}: UpdateGroupProps, ctx:GraphQLContext) {
+        if (!ctx.currentUser) {
+            throw new Error("Unauthorised");
+        }
+
+        const group = await ctx.prisma.group.findFirstOrThrow({
+            where: {
+                id: groupId,
+                members: {
+                    some: {
+                        userUid: ctx.currentUser.id,
+                        admin: true
+                    }
+                }
+            }
+        });
+
+        let joinCode = undefined;
+        if(joinable !== undefined) {
+            if(joinable && group.joinCode == null) {
+                while(true) {
+                    joinCode = generateJoinCode();
+                    const group = await ctx.prisma.group.findFirst({
+                        where: {
+                            joinCode
+                        }
+                    });
+
+                    if(!group) {
+                        break;
+                    }
+                }
+            } else if(!joinable) {
+                joinCode = null;
+            }
+        }
+
+        const updatedGroup = await ctx.prisma.group.update({
+            where: {
+                id: groupId
+            },
+            data: {
+                name,
+                joinable,
+                joinCode
+            }
+        });
+
+        return updatedGroup;
     }
 }
 

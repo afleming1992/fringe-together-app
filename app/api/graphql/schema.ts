@@ -11,6 +11,8 @@ type User {
 type Group {
     id: Int!
     name: String
+    joinable: Boolean
+    joinCode: String
     members: [GroupMembership]
     shows: [GroupShow]
 }
@@ -71,7 +73,9 @@ type Mutation {
 
     # Group Mutations
     createGroup(name: String!): Group
+    updateGroup(groupId: Int!, name: String, joinable: Boolean): Group
     updateShowInterest(groupId: Int!, showUri: String!, type: GroupShowInterestType!, date: String): GroupShow
+    joinGroup(joinCode: String!): Group
 }
 `
 

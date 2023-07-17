@@ -6,6 +6,8 @@ import { GroupShow, GroupShowInterestType } from "./types";
 export interface Group {
     id: number
     name: string
+    joinable: boolean
+    joinCode: string | null
     members: GroupMembership[]
     shows: GroupShow[]
 }
@@ -40,6 +42,8 @@ export const getGroupByIdQuery = gql`
         group(id: $groupId) {
             id
             name
+            joinCode
+            joinable
             members {
                 admin
                 user {
@@ -72,14 +76,6 @@ export const getGroupsQuery = gql`
         groups {
             id
             name
-            members {
-                admin
-                user {
-                    firstName
-                    lastName
-                    profilePic
-                }
-            }
         }
     }
 `   
@@ -126,4 +122,56 @@ export const updateShowInterest = async(groupId: number, type: GroupShowInterest
     }
 
     return data.updateShowInterest;
+}
+
+export const updateGroupMutation = gql`
+    mutation updateGroupMutation($groupId: Int!, $name: String, $joinable: Boolean) {
+        updateGroup(groupId: $groupId, name: $name, joinable: $joinable) {
+            id,
+            name,
+            joinable,
+            joinCode
+        }
+    }
+`
+
+export const updateGroup = async (groupId: number, name?: string, joinable?: boolean) : Promise<Group> => {
+    const { data, errors } = await apollo.mutate({
+        mutation: updateGroupMutation,
+        variables: {
+            groupId,
+            name,
+            joinable
+        }
+    })
+
+    if(errors) {
+        throw new Error(errors[0].message);
+    }
+
+    return data.updateGroup
+}
+
+export const joinGroupMutation = gql`
+    mutation joinGroupMutation($joinCode: String!) {
+        joinGroup(joinCode: $joinCode) {
+            id,
+            name
+        }
+    }
+`
+
+export const joinGroup = async (joinCode: string) : Promise<Group> => {
+    const { data, errors } = await apollo.mutate({
+        mutation: joinGroupMutation,
+        variables: {
+            joinCode
+        }
+    })
+
+    if(errors) {
+        throw new Error(errors[0].message)
+    }
+
+    return data.joinGroup;
 }
