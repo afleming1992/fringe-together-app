@@ -223,7 +223,7 @@ const mutators = {
 
         if(!groupMembership) throw new Error("Failed to Add to Group");
 
-        return groupMembership;
+        return group;
     },
     async updateGroup(parent: any, {groupId, name, joinable}: UpdateGroupProps, ctx:GraphQLContext) {
         if (!ctx.currentUser) {

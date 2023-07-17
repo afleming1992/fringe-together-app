@@ -151,3 +151,27 @@ export const updateGroup = async (groupId: number, name?: string, joinable?: boo
 
     return data.updateGroup
 }
+
+export const joinGroupMutation = gql`
+    mutation joinGroupMutation($joinCode: String!) {
+        joinGroup(joinCode: $joinCode) {
+            id,
+            name
+        }
+    }
+`
+
+export const joinGroup = async (joinCode: string) : Promise<Group> => {
+    const { data, errors } = await apollo.mutate({
+        mutation: joinGroupMutation,
+        variables: {
+            joinCode
+        }
+    })
+
+    if(errors) {
+        throw new Error(errors[0].message)
+    }
+
+    return data.joinGroup;
+}

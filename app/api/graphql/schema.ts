@@ -75,7 +75,7 @@ type Mutation {
     createGroup(name: String!): Group
     updateGroup(groupId: Int!, name: String, joinable: Boolean): Group
     updateShowInterest(groupId: Int!, showUri: String!, type: GroupShowInterestType!, date: String): GroupShow
-    joinGroup(joinCode: String!): GroupMembership
+    joinGroup(joinCode: String!): Group
 }
 `
 

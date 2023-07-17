@@ -1,5 +1,7 @@
-import { Button, Flex, FormControl, FormErrorMessage, Input, InputGroup, InputRightAddon, InputRightElement } from "@chakra-ui/react";
+import { joinGroup } from "@/lib/gql/group";
+import { Button, Flex, FormControl, FormErrorMessage, Input, InputGroup, InputRightAddon, InputRightElement, useToast } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as Yup from 'yup';
 
@@ -13,9 +15,26 @@ const JoinGroupSchema = Yup.object().shape({
 
 export const JoinGroupForm = ({onJoinedGroup}: JoinGroupFormProps) => {
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const router = useRouter();
+    const toast = useToast();
 
     const onSubmit = async(formData: any) => {
         setSubmitting(true);
+        try {
+            const upperCaseJoinCode = formData.joinCode.toUpperCase()
+            const group = await joinGroup(upperCaseJoinCode);
+            if(group) {
+                router.push(`/group/${group.id}`)
+            }
+        } catch (e: any) {
+            toast({
+                status: "error",
+                title: "Couldn't join new group",
+                description: "Either the Group doesn't exist or is closed to new members",
+                position: 'top'
+            })
+        }
+        setSubmitting(false);
     }
 
     return (
