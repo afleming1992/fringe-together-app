@@ -7,7 +7,6 @@ import GroupPageWrapper from "./components/GroupPageWrapper"
 //Params = Query Params from NextJS
 export interface GroupLayoutProps {
     children: ReactNode,
-    groupId: string,
     params: any
 }
 
