@@ -18,6 +18,9 @@ export const getShowQuery = gql`
 `
 
 export const getShow = async (uri: string) : Promise<Show> => {
+    // Strip Query Parameters out so it's a valid URI
+    const strippedUri = uri.split('?')[0];
+
     const { data } = await apollo.query({
         query: getShowQuery,
         variables: {

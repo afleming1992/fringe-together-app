@@ -74,7 +74,7 @@ const getAvailableShows = (availability: AvailabilityRemote, time: string) : str
 
     for(const dateString of availability.availableDates) {
         const date = new Date(dateString);
-        date.setUTCHours(parseInt(timeSplit[0]), parseInt(timeSplit[1]));
+        //date.setUTCHours(parseInt(timeSplit[0]), parseInt(timeSplit[1]));
         availableShows.push(date.toISOString());
     }
 
