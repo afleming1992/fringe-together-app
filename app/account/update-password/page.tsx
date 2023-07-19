@@ -7,12 +7,12 @@ import { Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 import * as Yup from 'yup';
 
-export const UpdatePasswordSchema = Yup.object().shape({
+const UpdatePasswordSchema = Yup.object().shape({
     password: Yup.string().required('Password is required'),
-    passwordConfirmation: Yup.string().required('Password must be re-entered').oneOf([Yup.ref('password'), null], "Passwords must match")
+    passwordConfirmation: Yup.string().required('Password must be re-entered').oneOf([Yup.ref('password')], "Passwords must match")
 })
 
-export const UpdatePassword = () => {
+const UpdatePassword = () => {
     const { user } = useAuth();
     const toast = useToast();
     const [show, setShow] = useState(false)
