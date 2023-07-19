@@ -52,6 +52,7 @@ type ShowInfo {
     uri: String!
     title: String!
     location: String!
+    imageUri: String
 }
 
 enum GroupShowInterestType {

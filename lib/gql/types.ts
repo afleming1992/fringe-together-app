@@ -21,6 +21,7 @@ export interface ShowInfo {
     uri: string
     title: string
     location: string
+    imageUri?: string
 }
 
 export interface GroupShowInterest {

@@ -1,6 +1,6 @@
 import { GroupInterest, GroupInterestVariant } from "@/app/components/GroupInterest"
 import { GroupShow, GroupShowInterestType } from "@/lib/gql/types"
-import { Box, Flex, Icon, Text, useColorModeValue, useToast } from "@chakra-ui/react"
+import { Box, Flex, Icon, Text, useColorModeValue, useToast, Image } from "@chakra-ui/react"
 import { faClock, faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import GroupShowItemMenu from "./GroupShowItemMenu"
@@ -70,14 +70,22 @@ const GroupShowItem = ({show, members}: GroupShowItemProps) => {
         direction='column'
         mb={2}>
         <Box p='20px'>
-          <Flex w='100%' mb='10px'>
-            <Text fontWeight='600' color={mainText} w='100%' fontSize='xl'>
-                { show.show.title }
-            </Text>
+          <Flex>
             {
-                profile &&
-                <GroupShowItemMenu groupShow={show} currentUser={profile} />
+              show.show.imageUri &&
+              <Box p={2}>
+                <Image boxSize='75px' rounded={"lg"} src={show.show.imageUri} alt={`${show.show.title}'s Header Image`} />
+              </Box>
             }
+            <Flex p={2} w='100%' mb='10px'>
+              <Text fontWeight='600' color={mainText} w='100%' fontSize='xl'>
+                  { show.show.title }
+              </Text>
+              {
+                  profile &&
+                  <GroupShowItemMenu groupShow={show} currentUser={profile} />
+              }
+            </Flex>
           </Flex>
           <Box>
             <GroupInterest variant={GroupInterestVariant.OVERVIEW} interest={show.interest} members={members} currentInterestType={interestType} onInterestedClick={onInterestedClick} onGoingClick={onGoingClick} />

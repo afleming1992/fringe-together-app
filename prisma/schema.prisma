@@ -43,6 +43,7 @@ model ShowInfo {
   uri               String                  @id
   title             String
   location          String
+  imageUri          String?
   groupsInterested  GroupShow[]
 }
 
