@@ -8,7 +8,8 @@ export interface Show {
     duration: string,
     showRun: string,
     description: string,
-    availableShows: string[]
+    availableShows: string[],
+    imageUri?: string
 }
 
 export interface GroupShow {
@@ -20,6 +21,7 @@ export interface ShowInfo {
     uri: string
     title: string
     location: string
+    imageUri?: string
 }
 
 export interface GroupShowInterest {

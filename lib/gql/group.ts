@@ -58,6 +58,7 @@ export const getGroupByIdQuery = gql`
                     uri
                     title
                     location
+                    imageUri
                 }
                 interest {
                     date

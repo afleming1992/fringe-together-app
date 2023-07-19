@@ -115,11 +115,14 @@ const mutators = {
             where: {
                 uri: showUri
             },
-            update: {},
+            update: {
+                imageUri: show.imageUri
+            },
             create: {
                 uri: showUri,
                 title: show.title,
-                location: show.location
+                location: show.location,
+                imageUri: show.imageUri
             }
         })
 

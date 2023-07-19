@@ -101,6 +101,7 @@ const NavBar = () => {
 const NavLink = ({link}: { link: Link }) => {
     return (
         <Link
+            as={NextLink}
             p={2}
             fontSize={'sm'}
             fontWeight={500}

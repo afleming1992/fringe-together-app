@@ -45,12 +45,14 @@ type Show {
     description: String,
     showRun: String,
     availableShows: [String]
+    imageUri: String
 }
 
 type ShowInfo {
     uri: String!
     title: String!
     location: String!
+    imageUri: String
 }
 
 enum GroupShowInterestType {
