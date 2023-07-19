@@ -9,7 +9,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <Stack>
+            <Stack mt={4}>
                 <Box>
                     <Groups />
                 </Box>

@@ -34,7 +34,10 @@ const SignUp = () => {
 
         const authResponse: AuthResponse = await supabase.auth.signUp({
             email: formData.email,
-            password: formData.password
+            password: formData.password,
+            options: {
+                emailRedirectTo: `${location.origin}/auth/callback`
+            }
         });
 
         if (authResponse.error) {
@@ -71,17 +74,15 @@ const SignUp = () => {
             minH="20vh"
             align="center"
             justify="center">
-            <Stack spacing={8} mx={"auto"} maxW={'lg'} py={12} px={6}>
+            <Stack spacing={8} mx={"auto"} maxW={'xl'} py={12} px={6}>
                 <Stack align="center">
                     <Heading size="lg" textAlign="center">Sign Up</Heading>
-                    <Text fontSize={'lg'} color={'pink.200'}>
-                        Create an Account to use FringeTogether
-                    </Text>
                 </Stack>
             <Box 
                 rounded={'lg'}
                 bg={useColorModeValue('white', 'gray.700')}
                 boxShadow={'lg'}
+                minWidth={"sm"}
                 p={8}>
                 {
                     successMsg && 

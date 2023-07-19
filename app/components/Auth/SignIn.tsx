@@ -50,6 +50,7 @@ const SignIn = () => {
                         rounded='lg'
                         bg={useColorModeValue('white', 'gray.700')}
                         boxShadow={'lg'}
+                        minWidth={"sm"}
                         p={8}>
                         {
                             errorMsg && 
@@ -58,6 +59,7 @@ const SignIn = () => {
                                 {errorMsg}
                             </Alert>
                         }
+                        <Text mb={4}>Don&apos;t have an account? <Link onClick={() => setView(VIEWS.SIGN_UP)} color='pink'>Sign Up</Link></Text>
                         <Formik
                             initialValues={{
                                 email: '',
@@ -88,18 +90,19 @@ const SignIn = () => {
                                             )}
                                         </Field>
                                     </Stack>
-                                    <Stack spacing={10} pt={4}>
-                                        <Stack justifyContent={"right"}>
-                                            <Link>Forgot password?</Link>
-                                        </Stack>
+                                    <Stack pt={4}>
                                         <Button
                                             type="submit"
                                             isLoading={submitting}
                                             isDisabled={!dirty || !isValid} 
                                             loadingText="Signing In..."
                                             size="lg"
-                                            colorScheme="pink">
+                                            colorScheme="pink"
+                                            mb={4}>
                                             Sign In
+                                        </Button>
+                                        <Button variant="outline" onClick={() => setView(VIEWS.FORGOTTEN_PASSWORD)}>
+                                            Forgot Password?
                                         </Button>
                                     </Stack>
                                 </Form>

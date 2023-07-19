@@ -4,48 +4,42 @@ import NextLink from 'next/link';
 import { Session } from '@supabase/auth-helpers-nextjs';
 import { VIEWS, useAuth } from '../AuthProvider';
 import SignedInMenu from './SignedInMenu';
-import { Box, Flex, IconButton, useColorModeValue, useDisclosure, Text, useBreakpointValue, Button, Stack, Collapse, Link, Popover, PopoverTrigger, PopoverContent, Container } from '@chakra-ui/react';
+import { Box, Flex, IconButton, useColorModeValue, useDisclosure, Text, useBreakpointValue, Button, Stack, Collapse, Link, Popover, PopoverTrigger, PopoverContent, Container, HStack, Spinner } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { ReactNode } from 'react';
 
 interface NavbarProps {
     session: Session | null
 }
+
+interface Link {
+    name: string,
+    href: string
+}
+
+const Links: Link[] = [{
+    name:"My Groups",
+    href:"/"
+}]
 
 const NavBar = () => {
     const { isOpen, onToggle } = useDisclosure();
     const { initial, session, profile, setView } = useAuth();
 
     return  (
-        <Box>
-            <Flex
-                bg={useColorModeValue('white', 'gray.800')}
-                color={useColorModeValue('gray.600', 'white')}
-                minH={"60px"}
-                py={{ base: 2 }}
-                px={{ base: 4 }}
-                align={'center'}>
-                    <Flex
-                        flex={{ base:1, md: 'auto' }}
-                        ml={{ base: -2 }}
-                        display={{ base: 'flex', md: 'none' }}>
-                        <IconButton as={NextLink}
-                            href={'/'}
-                            variant='ghost'
-                            aria-label="Home"
-                        >
-                            <FontAwesomeIcon icon={faHome} />
-                        </IconButton>
-                        {/* <IconButton
-                            onClick={onToggle}
-                            icon={
-                            isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-                            }
-                            variant={'ghost'}
-                            aria-label={'Toggle Navigation'}
-                        /> */}
-                    </Flex>
-                    <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+        <>
+            <Box borderBottom={"1px"} borderColor={useColorModeValue('gray.100', 'gray.900')} px={4}>
+                <Flex h={16} alignItems={"center"} justifyContent={'space-between'}>
+                    <IconButton
+                        size={'md'}
+                        icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+                        aria-label={'Open Menu'}
+                        display={{ md: 'none' }}
+                        onClick={onToggle}
+                    />
+                    <HStack spacing={8} alignItems={'center'}>
                         <Text
                             as={NextLink}
                             href={"/"}
@@ -56,78 +50,69 @@ const NavBar = () => {
                             fontSize={'2xl'}>
                             Fringe<Text display="inline" color="pink.400">Together</Text>
                         </Text>
-
-                        <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-                            <DesktopNav />
-                        </Flex>
-                    </Flex>
-                    <Stack
-                        flex={{ base: 1, md: 0 }}
-                        justify={'flex-end'}
-                        direction={'row'}
-                        spacing={6}>
-                        { !session && (
+                        {
+                            session &&
+                            <HStack
+                                as={'nav'}
+                                spacing={4}
+                                display={{ base: 'none', md: 'flex' }}>
+                                {Links.map((link) => (
+                                    <NavLink key={link.name} link={link} />
+                                ))}
+                            </HStack>
+                        }
+                    </HStack>
+                    <Flex alignItems={'center'}>
+                        {
+                            profile &&
+                            <SignedInMenu />
+                        }
+                        {
+                            !profile && session &&
+                            <Spinner color="pink" />
+                        }
+                        {
+                            !session &&
                             <>
-                                <Button
-                                    as={'a'}
-                                    fontSize={'sm'}
-                                    fontWeight={400}
-                                    variant={'link'}
-                                    onClick={() => setView(VIEWS.SIGN_IN)}>
+                                <Button size={"sm"} bg="pink.400" onClick={() => setView(VIEWS.SIGN_IN)}>
                                     Sign In
                                 </Button>
-                                <Button
-                                    as={'a'}
-                                    display={{ base: 'none', md: 'inline-flex'}}
-                                    fontSize={'sm'}
-                                    fontWeight={600}
-                                    color={'white'}
-                                    bg={'pink.400'}
-                                    href={"#"}
-                                    _hover={{
-                                        bg: 'pink.500'
-                                    }}
-                                    onClick={() => setView(VIEWS.SIGN_UP)}>
-                                        Sign Up
-                                </Button>
                             </>
-                        )}
-                        { session && (
-                            <>
-                                <SignedInMenu />
-                            </>
-                        )}
-                    </Stack>
+                        }
+                    </Flex>
                 </Flex>
-                <Collapse in={isOpen} animateOpacity>
-                    <MobileNav />
-                </Collapse>
+                {
+                    session &&
+                    <Collapse in={isOpen}>
+                        <Box pb={4} display={{ md: 'none' }}>
+                            <Stack as={'nav'} spacing={4}>
+                            {Links.map((link) => (
+                                <NavLink key={link.name} link={link} />
+                            ))}
+                            </Stack>
+                        </Box>
+                    </Collapse>
+                }
             </Box>
+        </>
     )
 }
 
-interface DesktopNavProps {
-
-}
-
-const DesktopNav = (props: DesktopNavProps) => {
-    const linkColor = useColorModeValue('gray.600', 'gray.200');
-    const linkHoverColor = useColorModeValue('gray.800', 'white');
-    const popoverContentBgColor = useColorModeValue('white', 'gray.800');
-
+const NavLink = ({link}: { link: Link }) => {
     return (
-        <Stack direction={'row'} align={"center"} spacing={4}>
-            <Box>
-                
-            </Box>
-        </Stack>
-    )
+        <Link
+            p={2}
+            fontSize={'sm'}
+            fontWeight={500}
+            rounded={'lg'}
+            _hover={{
+                textDecoration: 'none',
+                bg: useColorModeValue('gray.200', 'gray.700'),
+            }}
+            href={link.href}>
+            {link.name}
+        </Link>
+    );
 }
-
-const MobileNav = () => {
-    return (
-        <></>
-    )
-} 
 
 export default NavBar;
