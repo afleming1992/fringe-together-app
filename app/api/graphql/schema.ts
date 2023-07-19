@@ -45,6 +45,7 @@ type Show {
     description: String,
     showRun: String,
     availableShows: [String]
+    imageUri: String
 }
 
 type ShowInfo {

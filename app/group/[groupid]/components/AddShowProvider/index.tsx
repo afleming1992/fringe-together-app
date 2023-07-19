@@ -32,7 +32,8 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
     const value = useMemo(() => {
         const updateInterest = async (showUri: string, type: GroupShowInterestType, date?: Date | null) => {
             if(group) {
-                const result = await updateShowInterest(group.id, type, showUri, date);
+                const strippedShowUri = showUri.split('?')[0];
+                const result = await updateShowInterest(group.id, type, strippedShowUri, date);
     
                 if(result) {
                     toast({

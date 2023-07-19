@@ -12,7 +12,8 @@ export const getShowQuery = gql`
             duration,
             description,
             availableShows,
-            showRun
+            showRun,
+            imageUri
         }
     }
 `
@@ -24,7 +25,7 @@ export const getShow = async (uri: string) : Promise<Show> => {
     const { data } = await apollo.query({
         query: getShowQuery,
         variables: {
-            uri
+            uri: strippedUri
         }
     })
 

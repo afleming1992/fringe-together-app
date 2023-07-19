@@ -8,7 +8,8 @@ export interface Show {
     duration: string,
     showRun: string,
     description: string,
-    availableShows: string[]
+    availableShows: string[],
+    imageUri?: string
 }
 
 export interface GroupShow {

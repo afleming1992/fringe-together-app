@@ -12,6 +12,7 @@ export interface ShowRemote {
     time: string,
     title: string,
     uri: string,
+    imgUri?: string
 }
 
 interface AvailabilityRemote {
@@ -31,9 +32,10 @@ const getShowQuery = gql`
             time,
             description,
             availability {
-            id,
-            availableDates
-            }
+                id,
+                availableDates
+            },
+            imgUri
         }
     }
 `
@@ -64,6 +66,7 @@ const toShow = (remote: ShowRemote) : Show => {
         duration: remote.duration,
         description: remote.description,
         showRun: remote.date,
+        imageUri: remote.imgUri,
         availableShows: getAvailableShows(remote.availability, remote.time)
     }
 }
