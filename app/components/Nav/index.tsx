@@ -100,9 +100,9 @@ const NavBar = () => {
                         {
                             Links.map((link) => {
                                 if(link.sessionRequired && !session) {
-                                 return <></>
+                                    return <></>
                                 } else {
-                                    <NavLink key={link.name} link={link} />
+                                    return <NavLink key={link.name} link={link} />
                                 }
                             }
                         )}
