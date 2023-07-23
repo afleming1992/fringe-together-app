@@ -14,6 +14,9 @@ export const revalidate = 0;
 export const metadata = {
   title: 'FringeTogether',
   description: 'Planning your Fringe',
+  icons: {
+    icon: 'icons/icon-192x192.png'
+  }
 }
 
 export default async function RootLayout({
@@ -29,7 +32,16 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <head />
+      <head>
+        <meta charSet="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+        <meta name="description" content="Planning your fringe with friends, together" />
+        <meta name="theme-color" content="#000" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-icon.png"></link>
+      </head>
       <body className={inter.className}>
         <Providers accessToken={accessToken} cookies={cookies()}>
           <NavBar />
