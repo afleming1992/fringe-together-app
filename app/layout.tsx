@@ -14,6 +14,9 @@ export const revalidate = 0;
 export const metadata = {
   title: 'FringeTogether',
   description: 'Planning your Fringe',
+  icons: {
+    icon: 'icons/icon-192x192.png'
+  }
 }
 
 export default async function RootLayout({
@@ -35,7 +38,6 @@ export default async function RootLayout({
         <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
         <meta name="description" content="Planning your fringe with friends, together" />
         <meta name="theme-color" content="#000" />
-        <title>Title of the project</title>
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
