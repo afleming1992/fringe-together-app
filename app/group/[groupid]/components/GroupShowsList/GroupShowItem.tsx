@@ -16,9 +16,10 @@ interface GroupShowItemProps {
 
 const GroupShowItem = ({show, members}: GroupShowItemProps) => {
     const toast = useToast();
-    const { updateInterest } = useAddShow();
+    const { updateInterest, openModalForDate } = useAddShow();
     const { profile } = useAuth();
     const [ interestType, setInterestType ] = useState<GroupShowInterestType>(GroupShowInterestType.NOT_INTERESTED);
+    const [ interestDate, setInterestDate ] = useState<Date | null | undefined>(null);
 
     useEffect(() => {
       if(profile) {
@@ -28,30 +29,24 @@ const GroupShowItem = ({show, members}: GroupShowItemProps) => {
 
         if(interest) {
           setInterestType(interest.type);
+          setInterestDate(interest.date);
         } else {
           setInterestType(GroupShowInterestType.NOT_INTERESTED);
+          setInterestDate(undefined);
         }
       }
     }, [show, profile])
 
     const submitInterestChange = (type: GroupShowInterestType) => {
       if(interestType !== type) {
-        setInterestType(type);
-        toast({
-          title: `Registering as ${type}`,
-          position: 'top',
-          status: 'info',
-          duration: 5000
-        })
-        updateInterest(show.show.uri, type);
+        if(type === GroupShowInterestType.NOT_INTERESTED || !interestDate) {
+          openModalForDate(type, show.show.uri);
+        } else {
+          setInterestType(type);
+          updateInterest(show.show.uri, type);
+        }
       } else {
         setInterestType(GroupShowInterestType.NOT_INTERESTED)
-        toast({
-          title: 'Removing interest...',
-          position: 'top',
-          status: 'info',
-          duration: 5000
-        })
         updateInterest(show.show.uri, GroupShowInterestType.NOT_INTERESTED);
       }
     }

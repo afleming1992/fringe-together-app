@@ -147,9 +147,10 @@ const mutators = {
         } 
 
         const dbType = GroupShowInterestType[type]
+
         const interestData = {
             type: dbType,
-            date: date,
+            date: date ?? undefined,
             userUid: ctx.currentUser.id
         }
 
