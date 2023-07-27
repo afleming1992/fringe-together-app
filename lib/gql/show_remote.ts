@@ -2,6 +2,8 @@ import { getClient as getShowClient } from '@/lib/show_api';
 import { gql } from '@apollo/client';
 import { Show } from './types';
 
+const TIMES_VARY_TEXT = `Times vary. Click 'Dates, times and prices' to view the calendar`;
+
 export interface ShowRemote {
     availability: AvailabilityRemote,
     date: string,
@@ -73,6 +75,7 @@ const toShow = (remote: ShowRemote) : Show => {
 
 const getAvailableShows = (availability: AvailabilityRemote, time: string) : string[] => {
     const availableShows: string[] = [];
+
     const timeSplit = time.split(":");
 
     for(const dateString of availability.availableDates) {

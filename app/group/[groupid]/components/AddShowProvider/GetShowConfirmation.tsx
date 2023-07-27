@@ -13,32 +13,35 @@ interface GetShowConfirmationProps {
     confirmNo: () => void
 }
 
-const AlreadyBookedSchema = Yup.object().shape({
-    date: Yup.string().required("A Date is required")
-})
+const DATE_DISPLAY_OPTIONS = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 const GetShowConfirmation = ({show, updateInterest, confirmNo}: GetShowConfirmationProps) => {
     const [ confirmed , setConfirmed ] = useState<boolean>(false);
+    const [ type, setType ] = useState<GroupShowInterestType | null>(null);
+    const [ submitting, setSubmitting ] = useState<boolean>(false);
+    
     const [ going, setGoing ] = useState<boolean>(false);
     const [ interestedSubmitting, setInterestedSubmitting ] = useState<boolean>(false);
     const [ goingSubmitting, setGoingSubmitting ] = useState<boolean>(false);
-    // const [ alreadyBookedSubmitting, setAlreadyBookedSubmitting ] = useState<boolean>(false);
     
     const onInterestedClicked = (formData: any) => {
-        setInterestedSubmitting(true);
-        updateInterest(show.uri, GroupShowInterestType.INTERESTED);
+        setType(GroupShowInterestType.INTERESTED);
     }
 
     const onGoingClicked = (formData: any) => {
-        setGoingSubmitting(true);
-        updateInterest(show.uri, GroupShowInterestType.BOOKED);
+        setType(GroupShowInterestType.BOOKED);
     }
 
-    // const onAlreadyBookedSubmit = (formData: any) => {
-    //     setAlreadyBookedSubmitting(true);
-    //     // Need to add date back in here once we want to look into that
-    //     updateShowInterest(show.uri, GroupShowInterestType.BOOKED);
-    // }
+    const onDateSelected = (formData: any) => {
+        if(type) {
+            setSubmitting(true);
+            if(formData.date !== '') {
+                updateInterest(show.uri, type, formData.date);
+            } else {
+                updateInterest(show.uri, type);
+            }
+        }
+    }
 
     return (
         <>
@@ -57,37 +60,35 @@ const GetShowConfirmation = ({show, updateInterest, confirmNo}: GetShowConfirmat
                 </Box>
             }
             {
-                confirmed && !going &&
+                confirmed && !type &&
                 <Box mb={2} textAlign={"center"}>
                     <Text fontWeight={"bold"} mb={2}>Are you interested in this show or have you booked tickets already?</Text>
                     <Button isDisabled={goingSubmitting} isLoading={interestedSubmitting} loadingText="Submitting" onClick={onInterestedClicked} my={2} colorScheme="blue" size="lg" width="full">I&apos;m interested</Button>
                     <Button isDisabled={interestedSubmitting} isLoading={goingSubmitting} loadingText="Submitting" onClick={onGoingClicked} my={2} colorScheme="green" size="lg" width="full">I&apos;m going!</Button>
                 </Box>
             }
-            {/* 
-                Will add this again once Date Form is needed
-                {
-                confirmed && going &&
+            {   
+                confirmed && type &&
                 <Box mb={2} textAlign={"center"}>
                     <Formik
                         initialValues={{date: ""}}
-                        onSubmit={onAlreadyBookedSubmit}
-                        validationSchema={AlreadyBookedSchema}
+                        onSubmit={onDateSelected}
                     >
                         {({ isValid, dirty }) => (
                             <Form>
-                                <Text fontWeight={"bold"} mb={2}>Awesome! Which showing did you book? That way we can show this to your friends!</Text>
+                                <Text fontWeight={"bold"} mb={2}>{ type === GroupShowInterestType.BOOKED ? "Which date have you booked?" : "Are you interested in a particular date?"}</Text>
                                 <Field>
                                     {({ field, form }: FieldProps) => (
                                         <FormControl my={2}>
                                             <FormLabel>Date Booked</FormLabel>
-                                            <Select isDisabled={alreadyBookedSubmitting} onChange={field.onChange} name="date" placeholder="Select showing">
+                                            <Select isDisabled={submitting} onChange={field.onChange} name="date">
+                                                <option key="" value="">Don&apos;t select date</option>
                                                 {
                                                     show.availableShows.map((availableShow) => {
                                                         const date = new Date(availableShow);
                 
                                                         return (
-                                                            <option key={availableShow} value={availableShow}>{ date.toUTCString() }</option>
+                                                            <option key={availableShow} value={availableShow}>{ date.toLocaleDateString(undefined, DATE_DISPLAY_OPTIONS) }</option>
                                                         )
                                                     })
                                                 }
@@ -95,12 +96,12 @@ const GetShowConfirmation = ({show, updateInterest, confirmNo}: GetShowConfirmat
                                         </FormControl>
                                     )}
                                 </Field>
-                                <Button isDisabled={!dirty || !isValid} type="submit" isLoading={alreadyBookedSubmitting} loadingText="Submitting" colorScheme="green" width="full">Submit</Button>
+                                <Button type="submit" isLoading={submitting} loadingText="Submitting" colorScheme="green" width="full">Submit</Button>
                             </Form>
                         )}
                     </Formik>
                 </Box>
-            } */}
+            }
         </>
     )
 }
