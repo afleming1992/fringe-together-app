@@ -13,16 +13,12 @@ interface GetShowConfirmationProps {
     confirmNo: () => void
 }
 
-const DATE_DISPLAY_OPTIONS = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+const DATE_DISPLAY_OPTIONS: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 const GetShowConfirmation = ({show, updateInterest, confirmNo}: GetShowConfirmationProps) => {
     const [ confirmed , setConfirmed ] = useState<boolean>(false);
     const [ type, setType ] = useState<GroupShowInterestType | null>(null);
     const [ submitting, setSubmitting ] = useState<boolean>(false);
-    
-    const [ going, setGoing ] = useState<boolean>(false);
-    const [ interestedSubmitting, setInterestedSubmitting ] = useState<boolean>(false);
-    const [ goingSubmitting, setGoingSubmitting ] = useState<boolean>(false);
     
     const onInterestedClicked = (formData: any) => {
         setType(GroupShowInterestType.INTERESTED);
@@ -63,8 +59,8 @@ const GetShowConfirmation = ({show, updateInterest, confirmNo}: GetShowConfirmat
                 confirmed && !type &&
                 <Box mb={2} textAlign={"center"}>
                     <Text fontWeight={"bold"} mb={2}>Are you interested in this show or have you booked tickets already?</Text>
-                    <Button isDisabled={goingSubmitting} isLoading={interestedSubmitting} loadingText="Submitting" onClick={onInterestedClicked} my={2} colorScheme="blue" size="lg" width="full">I&apos;m interested</Button>
-                    <Button isDisabled={interestedSubmitting} isLoading={goingSubmitting} loadingText="Submitting" onClick={onGoingClicked} my={2} colorScheme="green" size="lg" width="full">I&apos;m going!</Button>
+                    <Button onClick={onInterestedClicked} my={2} colorScheme="blue" size="lg" width="full">I&apos;m interested</Button>
+                    <Button onClick={onGoingClicked} my={2} colorScheme="green" size="lg" width="full">I&apos;m going!</Button>
                 </Box>
             }
             {   

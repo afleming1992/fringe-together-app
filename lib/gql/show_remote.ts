@@ -42,7 +42,7 @@ const getShowQuery = gql`
     }
 `
 
-export const getShow = async (uri: String) : Promise<Show> => {
+export const getShow = async (uri: string) : Promise<Show> => {
     const client = getShowClient();
 
     const { data, error } = await client.query({

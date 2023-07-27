@@ -1,10 +1,12 @@
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader,  ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader,  ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import GetShowForm from "./GetShowForm";
 import { GroupShowInterestType, Show } from "@/lib/gql/types";
 import GetShowConfirmation from "./GetShowConfirmation";
 import { Group, updateShowInterest } from "@/lib/gql/group";
 import { useGroup } from "@/app/group/context/group";
+import { getShow } from "@/lib/gql/show";
+import { SimpleLoading } from "@/app/components/Loading";
 
 interface AddShowProviderProps {
     group: Group,
@@ -16,18 +18,47 @@ export interface AddShowContextData {
     updateInterest: any
 }
 
-export const AddShowContext = createContext<AddShowContextData>({openModal: () => {}, updateInterest: () => {}}) 
+export const ShowContext = createContext<AddShowContextData>({openModal: () => {}, updateInterest: () => {}}) 
 
-export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => {
+export const ShowProvider = ({children, ...props} : AddShowProviderProps) => {
     const toast = useToast();
     const { group, refresh } = useGroup();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ show, setShow ] = useState<Show | null>();
+    const [ gettingShow, setGettingShow ] = useState<boolean>(false);
+
+    const [ showUri, setShowUri ] = useState<string | null>(null)
+    const [ type, setType ] = useState<GroupShowInterestType | null>(null);
+
+    const onReset = useCallback(() => {
+        setGettingShow(false);
+        setShowUri(null)
+        setShow(null);
+        setType(null);
+    },[setShow, setType]);
 
     const onModalClose = useCallback(() => {
-        setShow(null);
+        onReset()
         onClose();
-    },[setShow, onClose]);
+    },[onReset, onClose]);
+
+    useEffect(() => {
+        const getShowData = async (showUri: string) => {
+            setGettingShow(true);
+            try {
+                const show = await getShow(showUri);
+                setShow(show);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setGettingShow(false);
+            }
+        }
+
+        if(showUri) {
+            getShowData(showUri);
+        }
+    }, [showUri]);
 
     const value = useMemo(() => {
         const updateInterest = async (showUri: string, type: GroupShowInterestType, date?: Date | null) => {
@@ -50,12 +81,17 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
 
         return {
             openModal: () => onOpen(),
+            openModalForDate: (interest: GroupShowInterestType, showUri: string) => {
+                setType(interest);
+                setShowUri(showUri);
+                onOpen();
+            },
             updateInterest: (showUri: string, type: GroupShowInterestType, date?: Date) => { updateInterest(showUri, type, date) }
         }
-    }, [onOpen, group, refresh, onModalClose, toast]);
+    }, [group, toast, onModalClose, refresh, onOpen]);
 
     return (
-        <AddShowContext.Provider value={value} {...props}>
+        <ShowContext.Provider value={value} {...props}>
             <Modal size="xl" isOpen={isOpen} onClose={onModalClose} closeOnOverlayClick={false}>
                 <ModalOverlay />
                 <ModalContent>
@@ -63,8 +99,14 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
                     <ModalCloseButton />
                     <ModalBody>
                         {
-                            !show &&
-                            <GetShowForm setShow={setShow} />
+                            !show && !gettingShow &&
+                            <GetShowForm setShowUri={setShowUri} />
+                        }
+                        {
+                            !show && gettingShow &&
+                            <Box alignContent="center">
+                                <SimpleLoading message="Getting Show Details..." />
+                            </Box>
                         }
                         {
                             show &&
@@ -74,12 +116,14 @@ export const AddShowProvider = ({children, ...props} : AddShowProviderProps) => 
                 </ModalContent>
             </Modal>
             {children}
-        </AddShowContext.Provider>
+        </ShowContext.Provider>
     );
+
+
 }
 
 export const useAddShow = () => {
-    const context = useContext(AddShowContext);
+    const context = useContext(ShowContext);
     if(context === undefined) {
         throw new Error('useAddShow must be used within a AddShowProvider');
     }

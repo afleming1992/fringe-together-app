@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import GroupShowItemMenu from "./GroupShowItemMenu"
 import { GroupMembership } from "@/lib/gql/group"
 import { useAuth } from "@/app/components/AuthProvider"
-import { useAddShow } from "../AddShowProvider"
+import { useAddShow } from "../ShowProvider"
 import { useEffect, useState } from "react"
 
 interface GroupShowItemProps {
