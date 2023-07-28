@@ -71,8 +71,8 @@ export const GroupInterestOverview = ({showInfo, interest, currentInterestType, 
     return (
         <Flex>
             <Stack direction="row" alignContent="center">
-                <InterestedButton onButtonClick={() => {onInterestedClick}} onViewClick={() => {onViewClick(GroupShowInterestType.INTERESTED)}} selected={currentInterestType === GroupShowInterestType.INTERESTED} memberMap={membersMap} interested={interested} />
-                <GoingButton onButtonClick={() => {onGoingClick}} onViewClick={() => {onViewClick(GroupShowInterestType.BOOKED)}} selected={currentInterestType === GroupShowInterestType.BOOKED} memberMap={membersMap} interested={going} />
+                <InterestedButton onButtonClick={onInterestedClick} onViewClick={() => {onViewClick(GroupShowInterestType.INTERESTED)}} selected={currentInterestType === GroupShowInterestType.INTERESTED} memberMap={membersMap} interested={interested} />
+                <GoingButton onButtonClick={onGoingClick} onViewClick={() => {onViewClick(GroupShowInterestType.BOOKED)}} selected={currentInterestType === GroupShowInterestType.BOOKED} memberMap={membersMap} interested={going} />
             </Stack>
         </Flex>
     )
