@@ -1,18 +1,16 @@
-import { GroupShow, GroupShowInterest, GroupShowInterestType } from "@/lib/gql/types"
-import { Avatar, AvatarBadge, AvatarGroup, Badge, Box, Button, ButtonGroup, Flex, Stack, useId } from "@chakra-ui/react";
-import UserAvatar from "../UserAvatar";
+import { GroupShowInterest, GroupShowInterestType, ShowInfo } from "@/lib/gql/types"
+import { Flex, Stack } from "@chakra-ui/react";
 import { User } from "@/lib/gql/user";
 import { GroupMembership } from "@/lib/gql/group";
-import { faCheck, faHeart, faTicketSimple, faCheckCircle, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as faHeartUnfilled, faCheckCircle as faCheckCircleUnfilled } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ReactNode } from "react";
+import { useInterestModal } from "@/app/group/[groupid]/components/GroupShowsList/GroupInterestModalProvider";
+import { GoingButton, InterestedButton } from "./GroupInterestButton";
 
 export enum GroupInterestVariant {
     OVERVIEW="overview"
 }
 
 interface GroupInterestProps {
+    showInfo: ShowInfo,
     variant?: GroupInterestVariant,
     members: GroupMembership[],
     interest: GroupShowInterest[],
@@ -33,7 +31,7 @@ const getInterested = (interest: GroupShowInterest[], includeInterestedInDate: b
     return interested;
 }
 
-const getBooked = (interest: GroupShowInterest[]): GroupShowInterest[] => {
+const getGoing = (interest: GroupShowInterest[]): GroupShowInterest[] => {
     const booked = interest.filter((item) => {
         return item.type == GroupShowInterestType.BOOKED
     });
@@ -49,79 +47,32 @@ const getMembersMap = (members: GroupMembership[]): Map<string, User> => {
     return map;
 }
 
-// const getUser = (uid: String, members: GroupMembership[]): GroupMembership | undefined => {
-//     const member: GroupMembership | undefined = members.find((member) => {
-//         return member.user.uid === uid
-//     });
-    
-//     return member;
-// }
-
 export const GroupInterest = ({variant = GroupInterestVariant.OVERVIEW, ...props}: GroupInterestProps) => {
     return <GroupInterestOverview {...props} />
 }
 
-interface ButtonState {
-    variant: string,
-    icon: IconDefinition
-}
-
-export const GroupInterestOverview = ({interest, currentInterestType, members, onInterestedClick, onGoingClick}: GroupInterestProps) => {
+export const GroupInterestOverview = ({showInfo, interest, currentInterestType, members, onInterestedClick, onGoingClick}: GroupInterestProps) => {
+    const { openModal } = useInterestModal();
     const membersMap = getMembersMap(members);
     const interested = getInterested(interest, true);
-    const booked = getBooked(interest);
+    const going = getGoing(interest);
 
-    let interestedButton: ButtonState = {
-        variant: "outline",
-        icon: faHeartUnfilled
-    }
-    let goingButton: ButtonState = {
-        variant: "outline",
-        icon: faCheckCircleUnfilled
-    }
-    if(currentInterestType === GroupShowInterestType.INTERESTED) {
-        interestedButton = {
-            variant: "solid",
-            icon: faHeart
-        }
-    } else if(currentInterestType === GroupShowInterestType.BOOKED) {
-        goingButton = {
-            variant: "solid",
-            icon: faCheckCircle
+    const onViewClick = (type: GroupShowInterestType) => {
+        switch(type) {
+            case GroupShowInterestType.INTERESTED:
+                openModal(showInfo, type, interested)
+                break;
+            case GroupShowInterestType.BOOKED:
+                openModal(showInfo, type, going)
+                break;
         }
     }
 
     return (
-        <Flex onClick={() => { console.log("Testing") }}>
-            <Stack direction="row">
-                <Box p={1} alignContent={"center"}>
-                    <Button mr={2} size="sm" onClick={onInterestedClick} variant={interestedButton.variant} leftIcon={<FontAwesomeIcon icon={interestedButton.icon} />} colorScheme="pink">&nbsp;{interested.length} Interested</Button>
-                    <AvatarGroup size="sm" mt={2} max={4}>
-                        {
-                            interested.map((item) => {
-                                const memberUser = membersMap.get(item.user.uid);
-
-                                return (
-                                    <Avatar key={item.user.uid} name={memberUser ? `${memberUser.firstName} ${memberUser.lastName}` : ''} src={memberUser?.profilePic ? memberUser.profilePic : undefined} />
-                                )
-                            })
-                        }
-                    </AvatarGroup>
-                </Box>
-                <Box p={1} alignContent={"center"}>
-                    <Button size="sm" onClick={onGoingClick} variant={goingButton.variant} leftIcon={<FontAwesomeIcon icon={goingButton.icon} />} colorScheme="green">&nbsp;{booked.length} Going</Button>
-                    <AvatarGroup size="sm" mt={2} max={4}>
-                        {
-                            booked.map((item) => {
-                                const memberUser = membersMap.get(item.user.uid);
-
-                                return (
-                                    <Avatar key={item.user.uid} name={memberUser ? `${memberUser.firstName} ${memberUser.lastName}` : ''} src={memberUser?.profilePic ? memberUser.profilePic : undefined} />
-                                )
-                            })
-                        }
-                    </AvatarGroup>
-                </Box>
+        <Flex>
+            <Stack direction="row" alignContent="center">
+                <InterestedButton onButtonClick={() => {onInterestedClick}} onViewClick={() => {onViewClick(GroupShowInterestType.INTERESTED)}} selected={currentInterestType === GroupShowInterestType.INTERESTED} memberMap={membersMap} interested={interested} />
+                <GoingButton onButtonClick={() => {onGoingClick}} onViewClick={() => {onViewClick(GroupShowInterestType.BOOKED)}} selected={currentInterestType === GroupShowInterestType.BOOKED} memberMap={membersMap} interested={going} />
             </Stack>
         </Flex>
     )

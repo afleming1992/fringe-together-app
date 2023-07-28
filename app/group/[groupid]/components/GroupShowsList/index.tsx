@@ -4,6 +4,7 @@ import { User } from "@/lib/gql/user";
 import GroupShowItem from './GroupShowItem';
 import { Box } from "@chakra-ui/react";
 import { GroupShowInterestType } from "@prisma/client";
+import { GroupShowModalProvider } from "./GroupInterestModalProvider";
 
 interface GroupShowsListProps {
     shows: GroupShow[]
@@ -11,21 +12,17 @@ interface GroupShowsListProps {
 }
 
 const GroupShowsList = ({shows, members}: GroupShowsListProps) => {
-
-    const onInterestClick = (type: GroupShowInterestType, show: Show) => {
-        
-    }
-
-
     return (
         <Box mt={2}>
-            {
-                shows.map((show) => {
-                    return (
-                        <GroupShowItem key={show.show.uri} show={show} members={members} />
-                    );
-                })
-            }
+            <GroupShowModalProvider>
+                {
+                    shows.map((show) => {
+                        return (
+                            <GroupShowItem key={show.show.uri} show={show} members={members} />
+                        );
+                    })
+                }
+            </GroupShowModalProvider>
         </Box>
     );
 }
