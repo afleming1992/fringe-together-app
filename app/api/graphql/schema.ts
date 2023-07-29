@@ -1,6 +1,8 @@
 import gql from "graphql-tag";
 
 const schema = gql`
+scalar DateTime
+
 type User {
     uid: ID!
     firstName: String!
@@ -27,7 +29,7 @@ type GroupShowInterest {
     id: Int!
     type: GroupShowInterestType
     user: User
-    date: String
+    date: DateTime
 }
 
 type GroupMembership {

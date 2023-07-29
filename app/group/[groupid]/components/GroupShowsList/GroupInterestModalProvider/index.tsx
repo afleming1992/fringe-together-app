@@ -2,6 +2,7 @@ import { GroupShowInterest, GroupShowInterestType, ShowInfo } from "@/lib/gql/ty
 import { useDisclosure } from "@chakra-ui/react";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { GroupShowInterestModal } from "./GroupShowInterestModal";
+import { useGroup } from "@/app/group/context/group";
 
 interface GroupInterestModalProviderProps {
     children: any
@@ -14,6 +15,7 @@ export interface GroupInterestModalContextData {
 export const GroupInterestModalContext = createContext<GroupInterestModalContextData>({openModal: () => {}});
 
 export const GroupShowModalProvider = ({children, ...props}: GroupInterestModalProviderProps) => {
+    const { group } = useGroup();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ show, setShow ] = useState<ShowInfo | null>(null);
     const [ type, setType ] = useState<GroupShowInterestType | null>(null);
@@ -32,7 +34,6 @@ export const GroupShowModalProvider = ({children, ...props}: GroupInterestModalP
     
     const value = useMemo(() => {
         const openModal = async (show: ShowInfo, type: GroupShowInterestType, interestList: GroupShowInterest[]) => {
-            console.log("FIRE");
             setShow(show);
             setType(type);
             setInterestList(interestList);
@@ -46,7 +47,7 @@ export const GroupShowModalProvider = ({children, ...props}: GroupInterestModalP
 
     return (
         <GroupInterestModalContext.Provider value={value} {...props}>
-            <GroupShowInterestModal isOpen={isOpen} onModalClose={() => onModalClose()} type={type} show={show} interestList={interestList} />
+            <GroupShowInterestModal group={group} isOpen={isOpen} onModalClose={() => onModalClose()} type={type} show={show} interestList={interestList} />
             {children}
         </GroupInterestModalContext.Provider>
     );

@@ -12,7 +12,7 @@ export enum GroupInterestVariant {
 interface GroupInterestProps {
     showInfo: ShowInfo,
     variant?: GroupInterestVariant,
-    members: GroupMembership[],
+    memberMap: Map<string, User>,
     interest: GroupShowInterest[],
     currentInterestType: GroupShowInterestType,
     onInterestedClick: () => void,
@@ -39,21 +39,14 @@ const getGoing = (interest: GroupShowInterest[]): GroupShowInterest[] => {
     return booked;
 }
 
-const getMembersMap = (members: GroupMembership[]): Map<string, User> => {
-    let map = new Map<string, User>();
-    members.map((member) => {
-        map.set(member.user.uid, member.user);
-    })
-    return map;
-}
+
 
 export const GroupInterest = ({variant = GroupInterestVariant.OVERVIEW, ...props}: GroupInterestProps) => {
     return <GroupInterestOverview {...props} />
 }
 
-export const GroupInterestOverview = ({showInfo, interest, currentInterestType, members, onInterestedClick, onGoingClick}: GroupInterestProps) => {
+export const GroupInterestOverview = ({showInfo, memberMap, interest, currentInterestType, onInterestedClick, onGoingClick}: GroupInterestProps) => {
     const { openModal } = useInterestModal();
-    const membersMap = getMembersMap(members);
     const interested = getInterested(interest, true);
     const going = getGoing(interest);
 
@@ -71,8 +64,8 @@ export const GroupInterestOverview = ({showInfo, interest, currentInterestType, 
     return (
         <Flex>
             <Stack direction="row" alignContent="center">
-                <InterestedButton onButtonClick={onInterestedClick} onViewClick={() => {onViewClick(GroupShowInterestType.INTERESTED)}} selected={currentInterestType === GroupShowInterestType.INTERESTED} memberMap={membersMap} interested={interested} />
-                <GoingButton onButtonClick={onGoingClick} onViewClick={() => {onViewClick(GroupShowInterestType.BOOKED)}} selected={currentInterestType === GroupShowInterestType.BOOKED} memberMap={membersMap} interested={going} />
+                <InterestedButton onButtonClick={onInterestedClick} onViewClick={() => {onViewClick(GroupShowInterestType.INTERESTED)}} selected={currentInterestType === GroupShowInterestType.INTERESTED} memberMap={memberMap} interested={interested} />
+                <GoingButton onButtonClick={onGoingClick} onViewClick={() => {onViewClick(GroupShowInterestType.BOOKED)}} selected={currentInterestType === GroupShowInterestType.BOOKED} memberMap={memberMap} interested={going} />
             </Stack>
         </Flex>
     )

@@ -5,6 +5,7 @@ import { faHeart, faCheckCircle, IconDefinition } from "@fortawesome/free-solid-
 import { faHeart as faHeartUnfilled, faCheckCircle as faCheckCircleUnfilled } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useInterestModal } from "@/app/group/[groupid]/components/GroupShowsList/GroupInterestModalProvider";
+import { useGroup } from "@/app/group/context/group";
 
 interface ButtonState {
     text: string
@@ -30,7 +31,9 @@ interface GroupInterestButtonProps {
     memberMap: Map<string, User>
 }
 
-const GroupInterestButton = ({onButtonClick, onViewClick, interested, memberMap, buttonState}: GroupInterestButtonProps) => {
+const GroupInterestButton = ({onButtonClick, onViewClick, interested, buttonState}: GroupInterestButtonProps) => {
+    const { group } = useGroup();
+    
     return (
         <Box p={1} alignContent={"center"}>
             <Button width="full" mr={2} mb={1} size="sm" onClick={onButtonClick} variant={buttonState.variant} leftIcon={<FontAwesomeIcon icon={buttonState.icon} />} colorScheme={buttonState.colorScheme}>&nbsp;{interested.length} {buttonState.text}</Button>
@@ -40,7 +43,11 @@ const GroupInterestButton = ({onButtonClick, onViewClick, interested, memberMap,
                     <AvatarGroup size="sm" max={4} onClick={() => {onViewClick}}>
                         {
                             interested.map((item) => {
-                                const memberUser = memberMap.get(item.user.uid);
+                                let memberUser = null;
+                                if(group?.membersMap) {
+                                    memberUser = group?.membersMap.get(item.user.uid);
+                                }
+
                                 return (
                                     <Avatar key={item.user.uid} name={memberUser ? `${memberUser.firstName} ${memberUser.lastName}` : ''} src={memberUser?.profilePic ? memberUser.profilePic : undefined} />
                                 )
