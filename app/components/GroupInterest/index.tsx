@@ -1,7 +1,6 @@
 import { GroupShowInterest, GroupShowInterestType, ShowInfo } from "@/lib/gql/types"
 import { Flex, Stack } from "@chakra-ui/react";
 import { User } from "@/lib/gql/user";
-import { GroupMembership } from "@/lib/gql/group";
 import { useInterestModal } from "@/app/group/[groupid]/components/GroupShowsList/GroupInterestModalProvider";
 import { GoingButton, InterestedButton } from "./GroupInterestButton";
 
@@ -12,7 +11,6 @@ export enum GroupInterestVariant {
 interface GroupInterestProps {
     showInfo: ShowInfo,
     variant?: GroupInterestVariant,
-    memberMap: Map<string, User>,
     interest: GroupShowInterest[],
     currentInterestType: GroupShowInterestType,
     onInterestedClick: () => void,
@@ -45,7 +43,7 @@ export const GroupInterest = ({variant = GroupInterestVariant.OVERVIEW, ...props
     return <GroupInterestOverview {...props} />
 }
 
-export const GroupInterestOverview = ({showInfo, memberMap, interest, currentInterestType, onInterestedClick, onGoingClick}: GroupInterestProps) => {
+export const GroupInterestOverview = ({showInfo, interest, currentInterestType, onInterestedClick, onGoingClick}: GroupInterestProps) => {
     const { openModal } = useInterestModal();
     const interested = getInterested(interest, true);
     const going = getGoing(interest);
@@ -64,8 +62,8 @@ export const GroupInterestOverview = ({showInfo, memberMap, interest, currentInt
     return (
         <Flex>
             <Stack direction="row" alignContent="center">
-                <InterestedButton onButtonClick={onInterestedClick} onViewClick={() => {onViewClick(GroupShowInterestType.INTERESTED)}} selected={currentInterestType === GroupShowInterestType.INTERESTED} memberMap={memberMap} interested={interested} />
-                <GoingButton onButtonClick={onGoingClick} onViewClick={() => {onViewClick(GroupShowInterestType.BOOKED)}} selected={currentInterestType === GroupShowInterestType.BOOKED} memberMap={memberMap} interested={going} />
+                <InterestedButton onButtonClick={onInterestedClick} onViewClick={() => {onViewClick(GroupShowInterestType.INTERESTED)}} selected={currentInterestType === GroupShowInterestType.INTERESTED} interested={interested} />
+                <GoingButton onButtonClick={onGoingClick} onViewClick={() => {onViewClick(GroupShowInterestType.BOOKED)}} selected={currentInterestType === GroupShowInterestType.BOOKED} interested={going} />
             </Stack>
         </Flex>
     )

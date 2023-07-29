@@ -83,7 +83,7 @@ const GroupShowItem = ({show, members}: GroupShowItemProps) => {
             </Flex>
           </Flex>
           <Box>
-            <GroupInterest showInfo={show.show} variant={GroupInterestVariant.OVERVIEW} interest={show.interest} members={members} currentInterestType={interestType} onInterestedClick={onInterestedClick} onGoingClick={onGoingClick} />
+            <GroupInterest showInfo={show.show} variant={GroupInterestVariant.OVERVIEW} interest={show.interest} currentInterestType={interestType} onInterestedClick={onInterestedClick} onGoingClick={onGoingClick} />
           </Box>
         </Box>
         <Flex

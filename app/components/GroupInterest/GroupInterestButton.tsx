@@ -1,10 +1,8 @@
 import { GroupShowInterest, GroupShowInterestType } from "@/lib/gql/types"
-import { User } from "@/lib/gql/user"
 import { Button, AvatarGroup, Avatar, Box } from "@chakra-ui/react"
 import { faHeart, faCheckCircle, IconDefinition } from "@fortawesome/free-solid-svg-icons"
 import { faHeart as faHeartUnfilled, faCheckCircle as faCheckCircleUnfilled } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useInterestModal } from "@/app/group/[groupid]/components/GroupShowsList/GroupInterestModalProvider";
 import { useGroup } from "@/app/group/context/group";
 
 interface ButtonState {
@@ -18,7 +16,6 @@ interface SpecificGroupInterestButtonProps {
     selected: boolean,
     onButtonClick: () => void,
     onViewClick:  () => void,
-    memberMap: Map<string, User>
     interested: GroupShowInterest[]
 }
 
@@ -27,8 +24,7 @@ interface GroupInterestButtonProps {
     buttonState: ButtonState,
     onButtonClick: () => void,
     onViewClick: () => void,
-    interested: GroupShowInterest[],
-    memberMap: Map<string, User>
+    interested: GroupShowInterest[]
 }
 
 const GroupInterestButton = ({onButtonClick, onViewClick, interested, buttonState}: GroupInterestButtonProps) => {
