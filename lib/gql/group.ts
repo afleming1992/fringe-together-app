@@ -9,12 +9,21 @@ export interface Group {
     joinable: boolean
     joinCode: string | null
     members: GroupMembership[]
-    shows: GroupShow[]
+    shows: GroupShow[],
+    membersMap: Map<string, User>
 }
 
 export interface GroupMembership {
     admin: boolean
     user: User
+}
+
+export const getMembersMap = (members: GroupMembership[]): Map<string, User> => {
+    let map = new Map<string, User>();
+    members.map((member) => {
+        map.set(member.user.uid, member.user);
+    })
+    return map;
 }
 
 export const getGroups = async () => {
@@ -34,7 +43,11 @@ export const getGroupById = async (id: number, invalidate: boolean = false): Pro
     if(error) {
         throw new Error(error.message);
     }
-    return data.group;
+
+    return {
+        ...data.group,
+        membersMap: getMembersMap(data.group.members)
+    }
 }
 
 export const getGroupByIdQuery = gql`

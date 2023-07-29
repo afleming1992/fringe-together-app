@@ -4,7 +4,7 @@ import { AvatarGroup, Box, Button, ButtonGroup, Flex, Grid, GridItem, Heading, S
 import { useGroup } from "../../context/group";
 import UserAvatar from "@/app/components/UserAvatar";
 import { useRouter } from "next/navigation";
-import { AddShowProvider } from "./AddShowProvider";
+import { ShowProvider } from "./ShowProvider";
 import { GroupLock } from "./GroupLock";
 
 interface GroupPageWrapperProps {
@@ -26,7 +26,7 @@ const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
         {
             group && 
             <>
-            <AddShowProvider group={group}>
+            <ShowProvider group={group}>
                 <Box bg="gray.900" mb="1">
                     <Flex p={2} direction={{ base: 'column', md: 'row' }}>
                         <Box flex={3}>       
@@ -35,7 +35,7 @@ const GroupPageWrapper = ({children}: GroupPageWrapperProps) => {
                     </Flex>
                     {children}
                 </Box>
-            </AddShowProvider>
+            </ShowProvider>
             </>
         }
         </>

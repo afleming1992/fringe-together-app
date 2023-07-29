@@ -3,7 +3,7 @@
 
 import { Button, Flex, Stack, Skeleton, Tab, TabList, TabPanels, Tabs, TabPanel } from "@chakra-ui/react";
 import { useGroup } from "../context/group";
-import { useAddShow } from "./components/AddShowProvider";
+import { useAddShow } from "./components/ShowProvider";
 import GroupShowsList from "./components/GroupShowsList";
 import { GroupMembersList } from "./components/GroupMembersList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
