@@ -1,13 +1,14 @@
 import { GroupInterest, GroupInterestVariant } from "@/app/components/GroupInterest"
 import { GroupShow, GroupShowInterestType } from "@/lib/gql/types"
 import { Box, Flex, Icon, Text, useColorModeValue, useToast, Image } from "@chakra-ui/react"
-import { faClock, faLocationDot } from "@fortawesome/free-solid-svg-icons"
+import { faCalendar, faClock, faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import GroupShowItemMenu from "./GroupShowItemMenu"
 import { GroupMembership } from "@/lib/gql/group"
 import { useAuth } from "@/app/components/AuthProvider"
 import { useAddShow } from "../AddShowProvider"
 import { useEffect, useState } from "react"
+import { Shadows_Into_Light_Two } from "next/font/google"
 
 interface GroupShowItemProps {
     show: GroupShow
@@ -77,10 +78,11 @@ const GroupShowItem = ({show, members}: GroupShowItemProps) => {
                 <Image boxSize='75px' rounded={"lg"} src={show.show.imageUri} alt={`${show.show.title}'s Header Image`} />
               </Box>
             }
-            <Flex p={2} w='100%' mb='10px'>
-              <Text fontWeight='600' color={mainText} w='100%' fontSize='xl'>
-                  { show.show.title }
-              </Text>
+            <Flex p={2} mb='10px' w='100%'>
+              <Box w='100%'>
+                  <Text fontWeight={'600'} color={mainText} fontSize='xl'>{ show.show.title }</Text>
+                  <Text fontSize='sm'><FontAwesomeIcon icon={faCalendar} />&nbsp;{ show.show.date } | <FontAwesomeIcon icon={faClock} />&nbsp; { show.show.time }</Text>
+              </Box>
               {
                   profile &&
                   <GroupShowItemMenu groupShow={show} currentUser={profile} />
@@ -105,7 +107,7 @@ const GroupShowItem = ({show, members}: GroupShowItemProps) => {
                   <FontAwesomeIcon icon={faClock} />
               </Icon>
               <Text color={mainText} fontSize='sm' my='auto' fontWeight='500'>
-                {}
+                { show.show.duration }
               </Text>
             </Flex>
             <Flex>

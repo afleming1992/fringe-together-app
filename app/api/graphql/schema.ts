@@ -44,15 +44,20 @@ type Show {
     duration: String,
     description: String,
     showRun: String,
-    availableShows: [String]
-    imageUri: String
+    availableShows: [String],
+    imageUri: String,
+    date: String,
+    time: String
 }
 
 type ShowInfo {
     uri: String!
     title: String!
     location: String!
-    imageUri: String
+    imageUri: String,
+    date: String,
+    time: String,
+    duration: String
 }
 
 enum GroupShowInterestType {
