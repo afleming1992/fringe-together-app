@@ -70,7 +70,6 @@ const toShow = (remote: ShowRemote) : Show => {
         imageUri: remote.imgUri,
         date: remote.date,
         time: remote.time,
-        duration: remote.duration,
         availableShows: getAvailableShows(remote.availability, remote.time)
     }
 }
