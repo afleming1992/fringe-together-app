@@ -2,7 +2,6 @@ import { Group, GroupShowInterestType, PrismaClient, User } from '@prisma/client
 import { GraphQLContext } from '../../context';
 import { getShow } from '@/lib/gql/show_remote';
 import generateJoinCode from '../../util/joinCodeGenerator';
-import ShowPreviewCard from '@/app/group/[groupid]/components/AddShowProvider/ShowPreviewCard';
 
 interface CreateGroupArgs {
     name: string
