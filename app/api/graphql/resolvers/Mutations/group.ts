@@ -2,6 +2,7 @@ import { Group, GroupShowInterestType, PrismaClient, User } from '@prisma/client
 import { GraphQLContext } from '../../context';
 import { getShow } from '@/lib/gql/show_remote';
 import generateJoinCode from '../../util/joinCodeGenerator';
+import ShowPreviewCard from '@/app/group/[groupid]/components/AddShowProvider/ShowPreviewCard';
 
 interface CreateGroupArgs {
     name: string
@@ -116,13 +117,19 @@ const mutators = {
                 uri: showUri
             },
             update: {
-                imageUri: show.imageUri
+                imageUri: show.imageUri,
+                time: show.time,
+                duration: show.duration,
+                date: show.date
             },
             create: {
                 uri: showUri,
                 title: show.title,
                 location: show.location,
-                imageUri: show.imageUri
+                imageUri: show.imageUri,
+                time: show.time,
+                duration: show.duration,
+                date: show.date,
             }
         })
 

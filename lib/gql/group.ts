@@ -72,6 +72,9 @@ export const getGroupByIdQuery = gql`
                     title
                     location
                     imageUri
+                    time
+                    date
+                    duration
                 }
                 interest {
                     date
@@ -101,7 +104,10 @@ export const addShowInterestMutation = gql`
             show {
                 uri,
                 title,
-                location
+                location,
+                time,
+                duration,
+                date,
             }
         }
     }

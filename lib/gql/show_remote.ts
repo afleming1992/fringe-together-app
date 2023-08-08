@@ -1,6 +1,7 @@
 import { getClient as getShowClient } from '@/lib/show_api';
 import { gql } from '@apollo/client';
 import { Show } from './types';
+import { removeListener } from 'process';
 
 const TIMES_VARY_TEXT = `Times vary. Click 'Dates, times and prices' to view the calendar`;
 
@@ -69,6 +70,8 @@ const toShow = (remote: ShowRemote) : Show => {
         description: remote.description,
         showRun: remote.date,
         imageUri: remote.imgUri,
+        date: remote.date,
+        time: remote.time,
         availableShows: getAvailableShows(remote.availability, remote.time)
     }
 }
